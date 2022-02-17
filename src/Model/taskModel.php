@@ -1,0 +1,89 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Model;
+
+use App\Exceptions\AppException;
+use App\Model\AppModel;
+use Throwable;
+use PDO;
+
+class TaskModel extends AppModel implements ModelInterface
+{
+    public function list(): array
+    {
+        try {
+            $query = "SELECT id, number, customer, object, type, priority, status, term, description FROM current_entries";
+            $entries = $this->connection->query($query);
+            return $entries->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            throw new AppException('Błąd pobierania listy zleceń');
+        }
+    }
+
+    public function get(int $id): array
+    {
+        try {
+            $query = "SELECT * FROM articles WHERE id=$id";
+            $article = $this->connection->query($query);
+            return $article->fetch(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            throw new AppException('Błąd pobierania artykułu');
+        }
+    }
+
+    public function add(array $articleData): void
+    {
+        try {
+            $title = $this->connection->quote($articleData['title']);
+            $content = $this->connection->quote($articleData['content']);
+            $status = $this->connection->quote($articleData['status']);
+            $category = $this->connection->quote($articleData['category']);
+
+            $query = "INSERT INTO articles (title, content, status, category) VALUES ($title, $content, $status, $category)";
+            $this->connection->exec($query);
+        } catch (Throwable $e) {
+            throw new AppException('Błąd podczas dodawania nowego artykułu');
+        }
+    }
+
+    public function edit(array $articleData): void
+    {
+        try {
+            $title = $this->connection->quote($articleData['title']);
+            $content = $this->connection->quote($articleData['content']);
+            $status = $this->connection->quote($articleData['status']);
+            $category = $this->connection->quote($articleData['category']);
+            $id = $articleData['id'];
+
+            $query = "UPDATE articles SET title = $title, content = $content, status = $status, category = $category WHERE id = $id LIMIT 1";
+            $this->connection->exec($query);
+        } catch (throwable $e) {
+            throw new AppException('Błąd przy zapisywaniu zmian w artykule.');
+        }
+    }
+
+    public function delete(int $id): void
+    {
+        try {
+            $query = "DELETE FROM articles WHERE id = $id LIMIT 1";
+            $this->connection->exec($query);
+        } catch (throwable $e) {
+            throw new AppException('Błąd podczas usuwania artykułu');
+        }
+    }
+
+    public function generateNumber(): ?string
+    {
+        try {
+            $query = "SELECT MAX(id) FROM current_entries";
+            $number = $this->connection->query($query);
+            $number = (int) $number->fetch(PDO::FETCH_COLUMN);
+            $number++;
+            $entryNumber = $number . '/' . date('Y');
+            return $entryNumber;
+        } catch (throwable $e) {
+            throw new AppException('Błąd podczas pobierania listy wpisów');
+        }
+    }
+}

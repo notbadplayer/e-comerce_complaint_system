@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "phpunit/phpunit": "4.3.*",
+        "elasticsearch/elasticsearch": "^7.16"
+    }
+}
