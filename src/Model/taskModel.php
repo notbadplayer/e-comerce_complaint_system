@@ -14,7 +14,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function list(): array
     {
         try {
-            $query = "SELECT id, number, customer, object, type, priority, status, term, description FROM current_entries";
+            $query = "SELECT number, customer, type, priority, status FROM current_entries";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
@@ -36,7 +36,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function add(array $taskData): void
     {
         try {
-            $number = $this->generateNumber();
+            $number = $this->connection->quote($this->generateNumber());
             $customer = $this->connection->quote($taskData['customer']);
             $object = $this->connection->quote($taskData['object']);
             $type = $this->connection->quote($taskData['type']);

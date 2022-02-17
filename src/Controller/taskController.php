@@ -36,6 +36,9 @@ class TaskController extends AppController
 
             ];
 
+            // var_dump($taskData);
+            // exit();
+
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
                 $this->view->render('add', [

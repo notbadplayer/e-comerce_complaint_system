@@ -44,7 +44,7 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="type" class="col-lg-2 col-form-label-sm">Typ zlecenia:</label>
                 <div class="col-lg-5">
-                    <select name="type" class="form-select-sm col-sm-12 border" id="type">
+                    <select name="type" class="form-select-sm col-12 border" id="type">
                         <option value="Nie wybrano" <?php echo (!isset($taskData['type']) ? 'selected' : '') ?>>Nie wybrano</option>
                         <option value="Zwrot" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Zwrot' ? 'selected' : '') ?>>Zwrot</option>
                         <option value="Gwarancyjne" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Gwarancyjne' ? 'selected' : '') ?>>Gwarancyjne</option>
@@ -55,8 +55,8 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="priority" class="col-lg-2 col-form-label-sm">Priorytet:</label>
                 <div class="col-lg-5">
-                    <select name="priority" class="form-select-sm col-sm-12 border" id="priority">
-                        <option value="" <?php echo (!isset($taskData['priority']) ? 'selected' : '') ?>>Standardowy</option>
+                    <select name="priority" class="form-select-sm col-12 border" id="priority">
+                        <option value="Standardowy" <?php echo (!isset($taskData['priority']) ? 'selected' : '') ?>>Standardowy</option>
                         <option value="Wysoki" <?php echo (isset($taskData['priority']) && $taskData['priority'] === 'Wysoki' ? 'selected' : '') ?>>Wysoki</option>
                         <option value="Niski" <?php echo (isset($taskData['priority']) && $taskData['priority'] === 'Niski' ? 'selected' : '') ?>>Niski</option>
                     </select>
@@ -66,7 +66,7 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
                 <div class="col-lg-5">
-                    <select name="category" class="form-select-sm col-sm-12 border" id="status" name="status" disabled>
+                    <select name="category" class="form-select-sm col-12 border" id="status" name="status" disabled>
                         <option value="Przyjęte" selected>Przyjęte</option>
                     </select>
                 </div>

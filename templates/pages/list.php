@@ -1,5 +1,5 @@
 <?php
-$articles = $params['articles'] ?? [];
+$tasks = $params['tasks'] ?? [];
 switch ($params['status']) {
     case 'added':
         echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -25,31 +25,32 @@ switch ($params['status']) {
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
-            <div><i class="fas fa-list me-2"></i>Lista artykułów</div>
+            <div><i class="fas fa-list me-2"></i>Lista zleceń</div>
         </div>
     </div>
 
     <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-primary table-striped table-bordered table-hover ">
+            <table class="table table-striped table-hover table-sm">
                 <thead>
-                    <th>Id</th>
-                    <th>Tytuł</th>
-                    <th>Kategoria</th>
-                    <th>Status</th>
-                    <th>Opcje</th>
+                    <th>Numer</th>
+                    <th>Klient</th>
+                    <th class="d-none d-md-table-cell">Typ</th>
+                    <th class="d-none d-md-table-cell">Priorytet</th>
+                    <th class="d-none d-md-table-cell">Status</th>
                 </thead>
-                <?php foreach ($articles as $article) : ?>
+                <?php foreach ($tasks as $task) : ?>
                     <tr>
-                        <td><?php echo $article['id'] ?></td>
-                        <td><?php echo $article['title'] ?></td>
-                        <td><?php echo ((bool) $article['category']) ? $article['category'] : 'brak kategorii' ?></td>
-                        <td><?php echo ((int)$article['status']) ? 'Opublikowany' : 'Ukryty' ?></td>
-                        <td>
+                        <td><?php echo $task['number'] ?></td>
+                        <td><?php echo $task['customer'] ?></td>
+                        <td class="d-none d-md-table-cell"><?php echo $task['type'] ?></td>
+                        <td class="d-none d-md-table-cell"><?php echo $task['priority'] ?></td>
+                        <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
+                        <!-- <td>
                             <a href="/?action=show&id=<?php echo $article['id'] ?>" class="btn btn-primary"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Wyświetl<span></a>
                             <a href="/?action=edit&id=<?php echo $article['id'] ?>" class="btn btn-primary"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePopup"><i class="far fa-trash-alt"></i><span class="d-none d-lg-inline ms-1">Usuń<span></button>
-                        </td>
+                        </td> -->
                     </tr>
                 <?php endforeach; ?>
             </table>
