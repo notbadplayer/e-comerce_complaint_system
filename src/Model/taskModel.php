@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model;
@@ -32,18 +33,31 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function add(array $articleData): void
+    public function add(array $taskData): void
     {
         try {
-            $title = $this->connection->quote($articleData['title']);
-            $content = $this->connection->quote($articleData['content']);
-            $status = $this->connection->quote($articleData['status']);
-            $category = $this->connection->quote($articleData['category']);
+            $number = $this->generateNumber();
+            $customer = $this->connection->quote($taskData['customer']);
+            $object = $this->connection->quote($taskData['object']);
+            $type = $this->connection->quote($taskData['type']);
+            $priority = $this->connection->quote($taskData['priority']);
+            $status = $this->connection->quote($taskData['status']);
+            $term = $this->connection->quote($taskData['term']);
+            $description = $this->connection->quote($taskData['description']);
+            $age = array("Peter" => 35, "Ben" => 37, "Joe" => 43);
+            $history = $this->connection->quote(json_encode(
+                array(
+                    date('Y-m-d H:i:s') => [
+                        'action' => 'Zarejestrowano zgłoszenie'
+                    ]
+                )
+            ));
 
-            $query = "INSERT INTO articles (title, content, status, category) VALUES ($title, $content, $status, $category)";
+            $query = "INSERT INTO current_entries (number, customer, object, type, priority, status, term, description, historia) VALUES ($number, $customer, $object, $type, $priority, $status, $term, $description, $history)";
             $this->connection->exec($query);
         } catch (Throwable $e) {
-            throw new AppException('Błąd podczas dodawania nowego artykułu');
+            exit($e);
+            throw new AppException('Błąd podczas dodawania nowego zlecenia');
         }
     }
 

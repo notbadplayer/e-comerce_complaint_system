@@ -29,12 +29,13 @@ class TaskController extends AppController
                 'object' => $this->request->postParam('object'),
                 'type' => $this->request->postParam('type'),
                 'priority' => $this->request->postParam('priority'),
-                'status' => $this->request->postParam('status'),
+                'status' => 'Przyjęte',
                 'term' => $this->request->postParam('term'),
                 'description' => $this->request->postParam('description'),
                 'created' => date('Y-m-d'),
 
             ];
+
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
                 $this->view->render('add', [
@@ -45,9 +46,9 @@ class TaskController extends AppController
                 ]);
                 exit();
             }
-            // $this->taskModel->add($articleData);
-            // header('location:/?status=added');
-            // exit();
+            $this->taskModel->add($taskData);
+            header('location:/?status=added');
+            exit();
         }
         $this->view->render('add', [
             'entryNumber' => $this->taskModel->generateNumber(),

@@ -44,10 +44,10 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="type" class="col-lg-2 col-form-label-sm">Typ zlecenia:</label>
                 <div class="col-lg-5">
-                    <select name="category" class="form-select-sm col-sm-12 border" id="type" name="type">
-                        <option value="" <?php echo (!isset($articleData['category']) ? 'selected' : '') ?>>Nie wybrano</option>
-                        <option value="Kategoria 1" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 1' ? 'selected' : '') ?>>Zwrot</option>
-                        <option value="Kategoria 2" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 2' ? 'selected' : '') ?>>Gwarancyjne</option>
+                    <select name="type" class="form-select-sm col-sm-12 border" id="type">
+                        <option value="Nie wybrano" <?php echo (!isset($taskData['type']) ? 'selected' : '') ?>>Nie wybrano</option>
+                        <option value="Zwrot" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Zwrot' ? 'selected' : '') ?>>Zwrot</option>
+                        <option value="Gwarancyjne" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Gwarancyjne' ? 'selected' : '') ?>>Gwarancyjne</option>
                     </select>
                 </div>
             </div>
@@ -55,10 +55,10 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="priority" class="col-lg-2 col-form-label-sm">Priorytet:</label>
                 <div class="col-lg-5">
-                    <select name="category" class="form-select-sm col-sm-12 border" id="priority" name="priority">
-                        <option value="" <?php echo (!isset($articleData['category']) ? 'selected' : '') ?>>Standardowy</option>
-                        <option value="Kategoria 1" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 1' ? 'selected' : '') ?>>Wysoki</option>
-                        <option value="Kategoria 2" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 2' ? 'selected' : '') ?>>Niski</option>
+                    <select name="priority" class="form-select-sm col-sm-12 border" id="priority">
+                        <option value="" <?php echo (!isset($taskData['priority']) ? 'selected' : '') ?>>Standardowy</option>
+                        <option value="Wysoki" <?php echo (isset($taskData['priority']) && $taskData['priority'] === 'Wysoki' ? 'selected' : '') ?>>Wysoki</option>
+                        <option value="Niski" <?php echo (isset($taskData['priority']) && $taskData['priority'] === 'Niski' ? 'selected' : '') ?>>Niski</option>
                     </select>
                 </div>
             </div>
@@ -66,11 +66,8 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
                 <div class="col-lg-5">
-                    <select name="category" class="form-select-sm col-sm-12 border" id="status" name="status">
-                        <option value="" <?php echo (!isset($articleData['category']) ? 'selected' : '') ?>>Przyjęte</option>
-                        <option value="Kategoria 1" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 1' ? 'selected' : '') ?>>W trakcie realizacji</option>
-                        <option value="Kategoria 2" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 2' ? 'selected' : '') ?>>Zrealizowane</option>
-                        <option value="Kategoria 2" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 2' ? 'selected' : '') ?>>Anulowane</option>
+                    <select name="category" class="form-select-sm col-sm-12 border" id="status" name="status" disabled>
+                        <option value="Przyjęte" selected>Przyjęte</option>
                     </select>
                 </div>
             </div>
