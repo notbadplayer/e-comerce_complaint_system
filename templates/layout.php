@@ -15,14 +15,15 @@
 
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary mb-5">
         <div class="container-fluid">
-            <a class="navbar-brand me-5" href="/">Artykuły</a>
+            <a class="navbar-brand me-5" href="/">
+                Obsługa Reklamacji</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link " aria-current="page" href="/">Lista artykułów</a>
-                    <a class="nav-link" href="/?action=add">Dodaj artykuł</a>
+                    <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
+                    <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
                 </div>
             </div>
         </div>

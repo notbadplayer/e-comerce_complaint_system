@@ -17,21 +17,12 @@ class Validate
         $this->customerRules($data['customer']);
         $this->objectRules($data['object']);
         $this->descriptionRules($data['description']);
-        $this->termRules($data['term'], $data['created']);
-        $this->emailRules($data['customerEmail']);
+        $this->emailRules($data['email']);
         $this->receiptRules($data['receipt']);
 
-        return [
-            'messages' => $this->messages,
-            'pass' => $this->pass
-        ];
-    }
-
-    public function validateTermOnly($updatedValue, $previousValue): array
-    {
-        $this->pass = true;
-        $this->messages = [];
-        $this->termRules($updatedValue, $previousValue);
+        if(isset($data['term'])){ //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
+            $this->termRules($data['term'], $data['created']);
+        }
 
         return [
             'messages' => $this->messages,
@@ -49,7 +40,7 @@ class Validate
             $this->pass = false;
         }
     }
-    
+
     private function emailRules(string $param): void
     {
         if ($param) {

@@ -4,19 +4,35 @@ $taskData = $params['taskData'] ?? [];
 
 $historytoDecode = str_replace('&quot;', '"', $taskData['history']);
 $history = json_decode($historytoDecode, true);
+
+switch ($params['status'] ?? '') {
+    case 'edited':
+        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+        Podstawowe dane zlecenia zostały aktualizowane.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+        break;
+    case 'paramChanged':
+        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            Parametr zlecenia został aktualizowany. Dopisano do historii.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+        break;
+}
 ?>
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
             <div><i class="far fa-file-alt me-2"></i>Edycja zlecenia</div>
             <div>
-                <a href="/" class="btn btn-primary btn-sm"><i class="far fa-arrow-alt-circle-left"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
+                <a href="/" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-1"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
             </div>
         </div>
     </div>
 
     <div class="card-body p-5">
-        <form method="post" action="/?action=add">
+        <form method="post" action="/?action=edit">
+            <input type="hidden" name="id" value="<?php echo $taskData['id'] ?? '' ?>" />
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
                 <div class="col-lg-4">
@@ -40,7 +56,7 @@ $history = json_decode($historytoDecode, true);
 
                 <label for="customerEmail" class="col-lg-2 col-form-label-sm">e-mail klienta:</label>
                 <div class="col-lg-4">
-                    <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
+                        <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
                     <?php foreach ($messages['email'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
@@ -58,7 +74,7 @@ $history = json_decode($historytoDecode, true);
 
                 <label for="receipt" class="col-lg-2 col-form-label-sm">numer paragonu:</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['receipt']) ? 'is-invalid' : '') ?>" id="receipt" placeholder="nr dokumentu sprzedaży" name="receipt" value="<?php echo $taskData['receipt'] ?? '' ?>">
+                        <input type="text" class="form-control form-control-sm <?php echo (isset($messages['receipt']) ? 'is-invalid' : '') ?>" id="receipt" placeholder="nr dokumentu sprzedaży" name="receipt" value="<?php echo $taskData['receipt'] ?? '' ?>">
                     <?php foreach ($messages['receipt'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
@@ -125,12 +141,12 @@ $history = json_decode($historytoDecode, true);
 
 
 
-            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-plus-circle me-2"></i>Dodaj</button>
+            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
         </form>
 
         <div class="card mt-5">
             <div class="card-header">
-                <h5 class="card-title">Historia zmian</h5>
+                <h5 class="card-title"><i class="fas fa-history me-2"></i>Historia zmian</h5>
             </div>
             <div class="card-body">
                 <table class="table table-striped table-hover table-sm">
@@ -144,8 +160,8 @@ $history = json_decode($historytoDecode, true);
                         <tr>
                             <td><?php echo $key ?></td>
                             <td><?php echo $value['action'] ?? '' ?></td>
-                            <td><?php echo $value['detail'] ?? '' ?></td>
-                            <td><?php echo $value['comment'] ?? '' ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo $value['detail'] ?? '' ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo $value['comment'] ?? '' ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>

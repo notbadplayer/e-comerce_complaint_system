@@ -16,9 +16,9 @@ class TaskController extends AppController
 
     public function show(): void
     {
-        $articleId = (int) $this->request->getParam('id');
+        $taskId = (int) $this->request->getParam('id');
         $this->view->render('show', [
-            'article' => $this->taskModel->get($articleId),
+            'taskData' => $this->taskModel->get($taskId),
         ]);
     }
 
@@ -61,28 +61,35 @@ class TaskController extends AppController
     public function edit(): void
     {
         if ($this->request->hasPost()) {
-            $articleData = [
-                'title' => $this->request->postParam('title'),
-                'content' => $this->request->postParam('content'),
-                'status' => $this->request->postParam('status'),
-                'category' => $this->request->postParam('category'),
-                'id' => $this->request->postParam('id')
-            ];
-            $validatedArticle = $this->validator->validate($articleData);
-            if (!$validatedArticle['pass']) {
+            $taskId = (int) $this->request->postParam('id');
+            $taskData= $this->taskModel->get($taskId);
+            //jeśli edytujemy dane, to tylko niektóre pola, trzeba więc pobrać jeszcze raz wszystkie rekordy, a potem do nich dopisać dane z formularza
+            $taskData ['customer'] = $this->request->postParam('customer');
+            $taskData ['receipt'] = $this->request->postParam('receipt');
+            $taskData ['email'] = $this->request->postParam('customerEmail');
+            $taskData ['object'] = $this->request->postParam('object');
+            $taskData ['description'] = $this->request->postParam('description');
+            $taskData ['id'] = $taskId;
+
+            $validatedTask = $this->validator->validate($taskData);
+            if (!$validatedTask['pass']) {
                 $this->view->render('edit', [
-                    'articleData' =>  $articleData,
-                    'messages' => $validatedArticle['messages']
+                    'entryNumber' => $this->taskModel->generateNumber(),
+                    'date' => $taskData['term'],
+                    'taskData' =>  $taskData,
+                    'messages' => $validatedTask['messages']
                 ]);
                 exit();
             }
-            $this->taskModel->edit($articleData);
-            header('location:/?status=edited');
+            $this->taskModel->edit($taskData);
+            header("location:/?action=edit&id=".$taskId."&status=edited");
             exit();
         }
         $taskId = (int) $this->request->getParam('id');
+        $taskData= $this->taskModel->get($taskId);
         $this->view->render('edit', [
-            'taskData' => $this->taskModel->get($taskId)
+            'taskData' => $taskData,
+            'status' => $this->request->getParam('status'),
         ]);
     }
 
@@ -114,13 +121,6 @@ class TaskController extends AppController
                     break;
             }
 
-            if ($taskAction === 'term') {
-                $validatedTerm = $this->validator->validateTermOnly($this->request->postParam('updatedValue'), $this->request->postParam('previousValue'));
-                if (!$validatedTerm['pass']) { 
-                    header("location:javascript://history.go(-1)");
-                    exit();
-                }
-            }
 
             $this->taskModel->changeParam(
                 $this->request->postParam('id'),
@@ -130,7 +130,7 @@ class TaskController extends AppController
                 $this->request->postParam('updatedValue'),
                 $this->request->postParam('comment')
             );
-            header('location:/?status=edited');
+            header("location:/?action=edit&id=".$this->request->postParam('id')."&status=paramChanged");
             exit();
         }
     }

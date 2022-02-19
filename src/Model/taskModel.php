@@ -64,19 +64,20 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function edit(array $articleData): void
+    public function edit(array $taskData): void
     {
         try {
-            $title = $this->connection->quote($articleData['title']);
-            $content = $this->connection->quote($articleData['content']);
-            $status = $this->connection->quote($articleData['status']);
-            $category = $this->connection->quote($articleData['category']);
-            $id = $articleData['id'];
+            $customer = $this->connection->quote($taskData['customer']);
+            $receipt = $this->connection->quote($taskData['receipt']);
+            $email = $this->connection->quote($taskData['email']);
+            $object = $this->connection->quote($taskData['object']);
+            $description = $this->connection->quote($taskData['description']);
+            $id = $taskData['id'];
 
-            $query = "UPDATE articles SET title = $title, content = $content, status = $status, category = $category WHERE id = $id LIMIT 1";
+            $query = "UPDATE current_entries SET customer = $customer, receipt = $receipt, email = $email, object = $object, description = $description WHERE id = $id LIMIT 1";
             $this->connection->exec($query);
         } catch (throwable $e) {
-            throw new AppException('Błąd przy zapisywaniu zmian w artykule.');
+            throw new AppException('Błąd przy zapisywaniu zmian zlecenia.');
         }
     }
 
@@ -108,7 +109,7 @@ class TaskModel extends AppModel implements ModelInterface
     {
         try {
             $id = $this->connection->quote($id);
-            $updatedValueToJson = $updatedValue; //bo jak wrzucisz zqotowaną wartość to będą podwójne apostrofy w podglądzie
+            $updatedValueToJson = $updatedValue; //bo jak wrzucisz zquotowaną wartość to będą podwójne apostrofy w podglądzie
             $updatedValue = $this->connection->quote($updatedValue);
             $history = $this->connection->quote(json_encode(
                 array(
@@ -123,7 +124,7 @@ class TaskModel extends AppModel implements ModelInterface
             $query = "UPDATE current_entries SET $taskAction = $updatedValue, history = JSON_MERGE_PATCH(history, $history) WHERE id = $id";
             $this->connection->exec($query);
         } catch (throwable $e) {
-            throw new AppException('Błąd przy zmianie parametru wpisu.');
+            throw new AppException('Błąd przy zmianie parametru zlecenia.');
         }
 
     }

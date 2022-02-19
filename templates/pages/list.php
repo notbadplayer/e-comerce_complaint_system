@@ -2,20 +2,8 @@
 $tasks = $params['tasks'] ?? [];
 switch ($params['status']) {
     case 'added':
-        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-        Artykuł został dodany.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        break;
-    case 'edited':
         echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
-        Artykuł został aktualizowany.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        break;
-    case 'deleted':
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Artykuł został usunięty.
+        Zlecenie zostało dodane.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
         break;
@@ -48,8 +36,8 @@ switch ($params['status']) {
                         <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
                         <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
                         <td>
-                            <a href="/?action=show&id=<?php echo $article['id'] ?>" class="btn btn-primary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
-                            <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
+                            <a href="/?action=show&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
+                            <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -58,6 +46,6 @@ switch ($params['status']) {
     </div>
 
     <div class="card-footer">
-        <a href="/?action=add" class="btn btn-primary">Dodaj nowy artykuł</a>
+        <a href="/?action=add" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Dodaj nowe zlecenie</a>
     </div>
 </div>

@@ -7,7 +7,7 @@ $taskData = $params['taskData'] ?? [];
         <div class="container-fluid">
             <div><i class="far fa-file-alt me-2"></i>Dodawanie zlecenia</div>
             <div>
-                <a href="/" class="btn btn-primary btn-sm"><i class="far fa-arrow-alt-circle-left"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
+                <a href="/" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-1"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
             </div>
         </div>
     </div>
@@ -115,7 +115,7 @@ $taskData = $params['taskData'] ?? [];
 
 
 
-            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-plus-circle me-2"></i>Dodaj</button>
+            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-plus me-2"></i>Dodaj</button>
         </form>
     </div>
 </div>
