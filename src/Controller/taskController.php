@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -25,15 +26,16 @@ class TaskController extends AppController
     {
         if ($this->request->hasPost()) {
             $taskData = [
+                'created' => date('Y-m-d'),
                 'customer' => $this->request->postParam('customer'),
+                'receipt' => $this->request->postParam('receipt'),
+                'customerEmail' => $this->request->postParam('customerEmail'),
                 'object' => $this->request->postParam('object'),
                 'type' => $this->request->postParam('type'),
                 'priority' => $this->request->postParam('priority'),
                 'status' => 'Przyjęte',
                 'term' => $this->request->postParam('term'),
                 'description' => $this->request->postParam('description'),
-                'created' => date('Y-m-d'),
-
             ];
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
@@ -51,6 +53,7 @@ class TaskController extends AppController
         }
         $this->view->render('add', [
             'entryNumber' => $this->taskModel->generateNumber(),
+            'created' => date('Y-m-d'),
             'date' => date('Y-m-d', (strtotime("+1 week"))),
         ]);
     }
@@ -96,7 +99,7 @@ class TaskController extends AppController
         if ($this->request->hasPost()) {
             $taskAction = $this->request->postParam('taskAction');
             $actionMessage = '';
-            switch ($taskAction){
+            switch ($taskAction) {
                 case 'type':
                     $actionMessage = 'zmiana typu zgłoszenia';
                     break;
@@ -106,13 +109,24 @@ class TaskController extends AppController
                 case 'status':
                     $actionMessage = 'zmiana statusu zgłoszenia';
                     break;
+                case 'term':
+                    $actionMessage = 'zmiana terminu zgłoszenia';
+                    break;
+            }
+
+            if ($taskAction === 'term') {
+                $validatedTerm = $this->validator->validateTermOnly($this->request->postParam('updatedValue'), $this->request->postParam('previousValue'));
+                if (!$validatedTerm['pass']) { 
+                    header("location:javascript://history.go(-1)");
+                    exit();
+                }
             }
 
             $this->taskModel->changeParam(
                 $this->request->postParam('id'),
                 $taskAction,
-                $actionMessage, 
-                $this->request->postParam('previousValue'), 
+                $actionMessage,
+                $this->request->postParam('previousValue'),
                 $this->request->postParam('updatedValue'),
                 $this->request->postParam('comment')
             );

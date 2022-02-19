@@ -1,4 +1,5 @@
 <?php
+
 declare(Strict_types=1);
 
 namespace App;
@@ -17,6 +18,20 @@ class Validate
         $this->objectRules($data['object']);
         $this->descriptionRules($data['description']);
         $this->termRules($data['term'], $data['created']);
+        $this->emailRules($data['customerEmail']);
+        $this->receiptRules($data['receipt']);
+
+        return [
+            'messages' => $this->messages,
+            'pass' => $this->pass
+        ];
+    }
+
+    public function validateTermOnly($updatedValue, $previousValue): array
+    {
+        $this->pass = true;
+        $this->messages = [];
+        $this->termRules($updatedValue, $previousValue);
 
         return [
             'messages' => $this->messages,
@@ -34,9 +49,30 @@ class Validate
             $this->pass = false;
         }
     }
+    
+    private function emailRules(string $param): void
+    {
+        if ($param) {
+            if (!filter_var($param, FILTER_VALIDATE_EMAIL)) {
+                $this->messages['email'][] = "Nieprawidłowy format e-mail";
+                $this->pass = false;
+            } elseif (strlen($param) > 50) {
+                $this->messages['email'][] = "Adres mailowy nie może zawierać więcej niż 50 naków";
+                $this->pass = false;
+            }
+        }
+    }
+    private function receiptRules(string $param): void
+    {
+        if (strlen($param) > 100) {
+            $this->messages['receipt'][] = "Numer nie może byc dłuższy niż 100 znaków";
+            $this->pass = false;
+        }
+    }
+
     private function objectRules(string $param): void
     {
-        if(!$param) {
+        if (!$param) {
             $this->messages['object'][] = "Pole przedmiot zlecenia nie może być puste";
             $this->pass = false;
         } elseif (strlen($param) > 200) {
@@ -47,7 +83,7 @@ class Validate
 
     private function descriptionRules(string $param): void
     {
-        if(!$param) {
+        if (!$param) {
             $this->messages['description'][] = "Opis zlecenia jest wymagany!";
             $this->pass = false;
         } elseif (strlen($param) > 300) {
@@ -58,10 +94,10 @@ class Validate
 
     private function termRules(string $param, string $comparisionData): void
     {
-        if(!$param) {
+        if (!$param) {
             $this->messages['term'][] = "Pole z datą wykonania zlecenia nie może być puste";
             $this->pass = false;
-        } elseif(strtotime($param) < strtotime($comparisionData)){
+        } elseif (strtotime($param) < strtotime($comparisionData)) {
             $this->messages['term'][] = "Termin zlecenia nie może być starszy niż jego utworzenie";
             $this->pass = false;
         }

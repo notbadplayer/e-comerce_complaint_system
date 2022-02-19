@@ -91,3 +91,33 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="taskTermPopup" tabindex="-1" aria-labelledby="taskTermPopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Zmiana terminu realizacji</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/?action=changeParam">
+                <input type="hidden" name="id" value="<?php echo $taskData['id'] ?? '' ?>" />
+                <input type="hidden" name="taskAction" value="term" />
+                <input type="hidden" name="previousValue" value="<?php echo $taskData['term'] ?? '' ?>" />
+                <div class="modal-body">
+                    <label for="updatedValue" class="col-form-label-sm">Termin realizacji zlecenia:</label>
+                    <input name ="updatedValue" type="date" class="form-control form-control-sm <?php echo (isset($messages['term']) ? 'is-invalid' : '') ?>" id="term" value="<?php echo $taskData['term'] ?? '' ?>">
+                    <?php foreach ($messages['term'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+
+                    <label for="comment" class="col-form-label-sm">Dodatkowe informacje:</label>
+                    <input type="text" class="form-control form-control-sm mb-5" id="comment" name="comment" placeholder="Tutaj można wpisać dodatkowy komentarz">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

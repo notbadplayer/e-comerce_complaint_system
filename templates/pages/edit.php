@@ -2,7 +2,7 @@
 $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
 
-$historytoDecode = str_replace('&quot;', '"', $taskData['historia']);
+$historytoDecode = str_replace('&quot;', '"', $taskData['history']);
 $history = json_decode($historytoDecode, true);
 ?>
 <div class="card" style="min-height: 80vh;">
@@ -19,16 +19,29 @@ $history = json_decode($historytoDecode, true);
         <form method="post" action="/?action=add">
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo $taskData['number'] ?? '' ?>" disabled>
+                </div>
+
+                <label for="created" class="col-lg-2 col-form-label-sm">Data zlecenia:</label>
+                <div class="col-lg-4">
+                    <input type="text" name="created" class="form-control form-control-sm" id="created" placeholder="Data zgłoszenia" value="<?php echo $taskData['created'] ?? '' ?>" disabled>
                 </div>
             </div>
 
             <div class="row mb-2">
                 <label for="customer" class="col-lg-2 col-form-label-sm">Zleceniodawca:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <input type="text" class="form-control form-control-sm <?php echo (isset($messages['customer']) ? 'is-invalid' : '') ?>" id="customer" placeholder="nazwa zleceniodawcy" name="customer" value="<?php echo $taskData['customer'] ?? '' ?>">
                     <?php foreach ($messages['customer'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+
+                <label for="customerEmail" class="col-lg-2 col-form-label-sm">e-mail klienta:</label>
+                <div class="col-lg-4">
+                    <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
+                    <?php foreach ($messages['email'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
                 </div>
@@ -36,9 +49,17 @@ $history = json_decode($historytoDecode, true);
 
             <div class="row mb-2">
                 <label for="object" class="col-lg-2 col-form-label-sm">Przedmiot zlecenia:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <input type="text" class="form-control form-control-sm <?php echo (isset($messages['object']) ? 'is-invalid' : '') ?>" id="object" placeholder="nazwa produktu" name="object" value="<?php echo $taskData['object'] ?? '' ?>">
                     <?php foreach ($messages['object'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+
+                <label for="receipt" class="col-lg-2 col-form-label-sm">numer paragonu:</label>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['receipt']) ? 'is-invalid' : '') ?>" id="receipt" placeholder="nr dokumentu sprzedaży" name="receipt" value="<?php echo $taskData['receipt'] ?? '' ?>">
+                    <?php foreach ($messages['receipt'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
                 </div>
@@ -46,7 +67,7 @@ $history = json_decode($historytoDecode, true);
 
             <div class="row mb-2">
                 <label for="type" class="col-lg-2 col-form-label-sm">Typ zlecenia:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskTypePopup">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="type" placeholder="typ zlecenia" name="type" value="<?php echo $taskData['type'] ?? '' ?>" disabled role="button">
@@ -58,7 +79,7 @@ $history = json_decode($historytoDecode, true);
 
             <div class="row mb-2">
                 <label for="priority" class="col-lg-2 col-form-label-sm">Priorytet:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskPriorityPopup">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="priority" placeholder="priorytet zgłoszenia" name="priority" value="<?php echo $taskData['priority'] ?? '' ?>" disabled role="button">
@@ -70,7 +91,7 @@ $history = json_decode($historytoDecode, true);
 
             <div class="row mb-2">
                 <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskStatusPopup">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="status" placeholder="status zgłoszenia" name="status" value="<?php echo $taskData['status'] ?? '' ?>" disabled role="button">
@@ -81,12 +102,14 @@ $history = json_decode($historytoDecode, true);
             </div>
 
             <div class="row mb-2">
-                <label for="term" class="col-lg-2 col-form-label-sm">Termin zlecenia:</label>
-                <div class="col-lg-5">
-                    <input type="date" class="form-control form-control-sm <?php echo (isset($messages['term']) ? 'is-invalid' : '') ?>" id="term" name="term" value="<?php echo $taskData['term'] ?? '' ?>">
-                    <?php foreach ($messages['term'] ?? [] as $message) : ?>
-                        <span class="text-danger"><?php echo $message ?></span>
-                    <?php endforeach; ?>
+                <label for="term" class="col-lg-2 col-form-label-sm">Termin realizacji:</label>
+                <div class="col-lg-4">
+                    <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskTermPopup">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="status" placeholder="status zgłoszenia" name="status" value="<?php echo $taskData['term'] ?? '' ?>" disabled role="button">
+                            <span class="input-group-text bg-white"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </a>
                 </div>
             </div>
 

@@ -37,14 +37,16 @@ class TaskModel extends AppModel implements ModelInterface
     {
         try {
             $number = $this->connection->quote($this->generateNumber());
+            $created = $this->connection->quote($taskData['created']);
             $customer = $this->connection->quote($taskData['customer']);
+            $receipt = $this->connection->quote($taskData['receipt']);
+            $email = $this->connection->quote($taskData['customerEmail']);
             $object = $this->connection->quote($taskData['object']);
             $type = $this->connection->quote($taskData['type']);
             $priority = $this->connection->quote($taskData['priority']);
             $status = $this->connection->quote($taskData['status']);
             $term = $this->connection->quote($taskData['term']);
             $description = $this->connection->quote($taskData['description']);
-            $age = array("Peter" => 35, "Ben" => 37, "Joe" => 43);
             $history = $this->connection->quote(json_encode(
                 array(
                     date('Y-m-d H:i:s') => [
@@ -54,7 +56,7 @@ class TaskModel extends AppModel implements ModelInterface
                 )
             ));
 
-            $query = "INSERT INTO current_entries (number, customer, object, type, priority, status, term, description, historia) VALUES ($number, $customer, $object, $type, $priority, $status, $term, $description, $history)";
+            $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history)";
             $this->connection->exec($query);
         } catch (Throwable $e) {
             exit($e);
@@ -118,7 +120,7 @@ class TaskModel extends AppModel implements ModelInterface
                 )
             ));
 
-            $query = "UPDATE current_entries SET $taskAction = $updatedValue, historia = JSON_MERGE_PATCH(historia, $history) WHERE id = $id";
+            $query = "UPDATE current_entries SET $taskAction = $updatedValue, history = JSON_MERGE_PATCH(history, $history) WHERE id = $id";
             $this->connection->exec($query);
         } catch (throwable $e) {
             throw new AppException('Błąd przy zmianie parametru wpisu.');
