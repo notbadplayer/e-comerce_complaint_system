@@ -1,54 +1,136 @@
 <?php
 $messages = $params['messages'] ?? [];
-$articleData = $params['articleData'] ?? [];
+$taskData = $params['taskData'] ?? [];
+
+$historytoDecode = str_replace('&quot;', '"', $taskData['historia']);
+$history = json_decode($historytoDecode, true);
 ?>
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
-            <div><i class="far fa-file-alt me-2"></i>Edycja artykułu</div>
+            <div><i class="far fa-file-alt me-2"></i>Edycja zlecenia</div>
             <div>
-                <a href="/" class="btn btn-primary"><i class="far fa-arrow-alt-circle-left"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
+                <a href="/" class="btn btn-primary btn-sm"><i class="far fa-arrow-alt-circle-left"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
             </div>
         </div>
     </div>
 
     <div class="card-body p-5">
-        <form method="post" action="/?action=edit">
-            <input type="hidden" name="id" value="<?php echo $articleData['id']; ?>"/>
-            <div class="form-group mb-3">
-                <label for="title">Tytuł artykułu</label>
-                <input type="text" name="title" class="form-control <?php echo (isset($messages['title']) ? 'is-invalid' : '') ?>" id="title" aria-describedby="titleField" placeholder="Tytuł artykułu" value="<?php echo $articleData['title'] ?? '' ?>">
-                <?php foreach ($messages['title'] ?? [] as $message) : ?>
-                    <div class="text-danger"><?php echo $message ?></div>
-                <?php endforeach; ?>
-            </div>
-            <div class="form-group">
-                <label for="content">Treść</label>
-                <textarea rows="10" class="form-control <?php echo (isset($messages['content']) ? 'is-invalid' : '') ?>" id="content" name="content" placeholder="Treść artykułu"><?php echo $articleData['content']; ?></textarea>
-                <?php foreach ($messages['content'] ?? [] as $message) : ?>
-                    <div class="text-danger"><?php echo $message ?></div>
-                <?php endforeach; ?>
+        <form method="post" action="/?action=add">
+            <div class="row mb-2">
+                <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo $taskData['number'] ?? '' ?>" disabled>
+                </div>
             </div>
 
-            <div class="form-group mt-4">
-                <div class="d-inline-block">Status:
-                    <label class="m-3">Opublikowany <input type="radio" name="status" value="1" <?php echo (isset($articleData['status']) && $articleData['status'] == 1 ? 'checked' : '') ?> /></label>
-                    <label>Ukryty <input type="radio" name="status" value="0" <?php echo (!isset($articleData['status']) || (int)$articleData['status'] === 0 ? 'checked' : '') ?>></label>
-                </div>
-                <div class="d-inline-block ms-5">
-                    <label>Kategoria:
-                        <div class="d-inline-block">
-                            <select name="category" class="form-select">
-                                <option value="" <?php echo (!isset($articleData['category']) ? 'selected' : '') ?>>Brak kategorii</option>
-                                <option value="Kategoria 1" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 1' ? 'selected' : '') ?>>Kategoria 1</option>
-                                <option value="Kategoria 2" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 2' ? 'selected' : '') ?>>Kategoria 2</option>
-                                <option value="Kategoria 3" <?php echo (isset($articleData['category']) && $articleData['category'] === 'Kategoria 3' ? 'selected' : '') ?>>Kategoria 3</option>
-                            </select>
-                        </div>
-                    </label>
+            <div class="row mb-2">
+                <label for="customer" class="col-lg-2 col-form-label-sm">Zleceniodawca:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['customer']) ? 'is-invalid' : '') ?>" id="customer" placeholder="nazwa zleceniodawcy" name="customer" value="<?php echo $taskData['customer'] ?? '' ?>">
+                    <?php foreach ($messages['customer'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-check me-2"></i>Zapisz</button>
+
+            <div class="row mb-2">
+                <label for="object" class="col-lg-2 col-form-label-sm">Przedmiot zlecenia:</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['object']) ? 'is-invalid' : '') ?>" id="object" placeholder="nazwa produktu" name="object" value="<?php echo $taskData['object'] ?? '' ?>">
+                    <?php foreach ($messages['object'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="type" class="col-lg-2 col-form-label-sm">Typ zlecenia:</label>
+                <div class="col-lg-5">
+                    <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskTypePopup">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="type" placeholder="typ zlecenia" name="type" value="<?php echo $taskData['type'] ?? '' ?>" disabled role="button">
+                            <span class="input-group-text bg-white"><i class="fas fa-pencil-alt"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="priority" class="col-lg-2 col-form-label-sm">Priorytet:</label>
+                <div class="col-lg-5">
+                    <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskPriorityPopup">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="priority" placeholder="priorytet zgłoszenia" name="priority" value="<?php echo $taskData['priority'] ?? '' ?>" disabled role="button">
+                            <span class="input-group-text bg-white"><i class="fas fa-pencil-alt"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
+                <div class="col-lg-5">
+                    <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#taskStatusPopup">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm col-auto border-end-0 bg-white" id="status" placeholder="status zgłoszenia" name="status" value="<?php echo $taskData['status'] ?? '' ?>" disabled role="button">
+                            <span class="input-group-text bg-white"><i class="fas fa-pencil-alt"></i></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="term" class="col-lg-2 col-form-label-sm">Termin zlecenia:</label>
+                <div class="col-lg-5">
+                    <input type="date" class="form-control form-control-sm <?php echo (isset($messages['term']) ? 'is-invalid' : '') ?>" id="term" name="term" value="<?php echo $taskData['term'] ?? '' ?>">
+                    <?php foreach ($messages['term'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="description" class="col-lg-2 col-form-label-sm">Opis zlecenia:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>">
+                    <?php foreach ($messages['description'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-plus-circle me-2"></i>Dodaj</button>
         </form>
+
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5 class="card-title">Historia zmian</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <th>Data</th>
+                        <th>Zdarzenie</th>
+                        <th class="d-none d-lg-table-cell">Szczegóły</th>
+                        <th class="d-none d-lg-table-cell">Dodatkowe informacje</th>
+                    </thead>
+                    <?php foreach ($history as $key => $value) : ?>
+                        <tr>
+                            <td><?php echo $key ?></td>
+                            <td><?php echo $value['action'] ?? '' ?></td>
+                            <td><?php echo $value['detail'] ?? '' ?></td>
+                            <td><?php echo $value['comment'] ?? '' ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+
+
+            </div>
+        </div>
+
+
     </div>
 </div>

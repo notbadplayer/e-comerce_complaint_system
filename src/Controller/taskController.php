@@ -35,10 +35,6 @@ class TaskController extends AppController
                 'created' => date('Y-m-d'),
 
             ];
-
-            // var_dump($taskData);
-            // exit();
-
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
                 $this->view->render('add', [
@@ -81,9 +77,9 @@ class TaskController extends AppController
             header('location:/?status=edited');
             exit();
         }
-        $articleId = (int) $this->request->getParam('id');
+        $taskId = (int) $this->request->getParam('id');
         $this->view->render('edit', [
-            'articleData' => $this->taskModel->get($articleId)
+            'taskData' => $this->taskModel->get($taskId)
         ]);
     }
 
@@ -93,5 +89,35 @@ class TaskController extends AppController
         $this->taskModel->delete((int) $articleId);
         header('location:/?status=deleted');
         exit();
+    }
+
+    public function changeParam()
+    {
+        if ($this->request->hasPost()) {
+            $taskAction = $this->request->postParam('taskAction');
+            $actionMessage = '';
+            switch ($taskAction){
+                case 'type':
+                    $actionMessage = 'zmiana typu zgłoszenia';
+                    break;
+                case 'priority':
+                    $actionMessage = 'zmiana priorytetu zgłoszenia';
+                    break;
+                case 'status':
+                    $actionMessage = 'zmiana statusu zgłoszenia';
+                    break;
+            }
+
+            $this->taskModel->changeParam(
+                $this->request->postParam('id'),
+                $taskAction,
+                $actionMessage, 
+                $this->request->postParam('previousValue'), 
+                $this->request->postParam('updatedValue'),
+                $this->request->postParam('comment')
+            );
+            header('location:/?status=edited');
+            exit();
+        }
     }
 }

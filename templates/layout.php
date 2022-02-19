@@ -32,6 +32,7 @@
         <?php 
         require_once("templates/pages/$page.php"); 
         require_once("templates/pages/delete.php"); 
+        require_once("templates/pages/popups.php"); 
         ?>
     </div>
 </body>

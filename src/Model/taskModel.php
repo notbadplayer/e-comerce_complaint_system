@@ -14,7 +14,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function list(): array
     {
         try {
-            $query = "SELECT number, customer, type, priority, status FROM current_entries";
+            $query = "SELECT id, number, customer, type, priority, status FROM current_entries";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
@@ -25,11 +25,11 @@ class TaskModel extends AppModel implements ModelInterface
     public function get(int $id): array
     {
         try {
-            $query = "SELECT * FROM articles WHERE id=$id";
-            $article = $this->connection->query($query);
-            return $article->fetch(PDO::FETCH_ASSOC);
+            $query = "SELECT * FROM current_entries WHERE id=$id";
+            $task = $this->connection->query($query);
+            return $task->fetch(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
-            throw new AppException('Błąd pobierania artykułu');
+            throw new AppException('Błąd pobierania zlecenia');
         }
     }
 
@@ -48,7 +48,8 @@ class TaskModel extends AppModel implements ModelInterface
             $history = $this->connection->quote(json_encode(
                 array(
                     date('Y-m-d H:i:s') => [
-                        'action' => 'Zarejestrowano zgłoszenie'
+                        'action' => 'Zarejestrowano zgłoszenie',
+                        ''
                     ]
                 )
             ));
@@ -99,5 +100,29 @@ class TaskModel extends AppModel implements ModelInterface
         } catch (throwable $e) {
             throw new AppException('Błąd podczas pobierania listy wpisów');
         }
+    }
+
+    public function changeParam(string $id, string $taskAction, string $actionMessage, string $previousValue, string $updatedValue, ?string $comment)
+    {
+        try {
+            $id = $this->connection->quote($id);
+            $updatedValueToJson = $updatedValue; //bo jak wrzucisz zqotowaną wartość to będą podwójne apostrofy w podglądzie
+            $updatedValue = $this->connection->quote($updatedValue);
+            $history = $this->connection->quote(json_encode(
+                array(
+                    date('Y-m-d H:i:s') => [
+                        'action' => $actionMessage,
+                        'detail' => $previousValue . '->' . $updatedValueToJson,
+                        'comment' => $comment,
+                    ]
+                )
+            ));
+
+            $query = "UPDATE current_entries SET $taskAction = $updatedValue, historia = JSON_MERGE_PATCH(historia, $history) WHERE id = $id";
+            $this->connection->exec($query);
+        } catch (throwable $e) {
+            throw new AppException('Błąd przy zmianie parametru wpisu.');
+        }
+
     }
 }

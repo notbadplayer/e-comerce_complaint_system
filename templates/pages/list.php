@@ -35,22 +35,22 @@ switch ($params['status']) {
                 <thead>
                     <th>Numer</th>
                     <th>Klient</th>
-                    <th class="d-none d-md-table-cell">Typ</th>
-                    <th class="d-none d-md-table-cell">Priorytet</th>
+                    <th class="d-none d-lg-table-cell">Typ</th>
+                    <th class="d-none d-lg-table-cell">Priorytet</th>
                     <th class="d-none d-md-table-cell">Status</th>
+                    <th></th>
                 </thead>
                 <?php foreach ($tasks as $task) : ?>
                     <tr>
                         <td><?php echo $task['number'] ?></td>
                         <td><?php echo $task['customer'] ?></td>
-                        <td class="d-none d-md-table-cell"><?php echo $task['type'] ?></td>
-                        <td class="d-none d-md-table-cell"><?php echo $task['priority'] ?></td>
+                        <td class="d-none d-lg-table-cell"><?php echo $task['type'] ?></td>
+                        <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
                         <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
-                        <!-- <td>
-                            <a href="/?action=show&id=<?php echo $article['id'] ?>" class="btn btn-primary"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Wyświetl<span></a>
-                            <a href="/?action=edit&id=<?php echo $article['id'] ?>" class="btn btn-primary"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deletePopup"><i class="far fa-trash-alt"></i><span class="d-none d-lg-inline ms-1">Usuń<span></button>
-                        </td> -->
+                        <td>
+                            <a href="/?action=show&id=<?php echo $article['id'] ?>" class="btn btn-primary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
+                            <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </table>
