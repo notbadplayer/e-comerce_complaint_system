@@ -5,8 +5,6 @@
         }
     },
     "require": {
-        "php": "^7.4",
-        "phpunit/phpunit": "4.3.*",
-        "elasticsearch/elasticsearch": "^7.16"
+        "php": "^7.4"
     }
 }
