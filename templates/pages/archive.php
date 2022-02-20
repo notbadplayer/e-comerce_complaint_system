@@ -19,7 +19,7 @@ switch ($params['status']) {
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
-            <div><i class="fas fa-list me-2"></i>Lista zleceń</div>
+            <div><i class="fas fa-archive me-2"></i>Zlecenia archiwalne</div>
         </div>
     </div>
 
@@ -52,6 +52,5 @@ switch ($params['status']) {
     </div>
 
     <div class="card-footer">
-        <a href="/?action=add" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Dodaj nowe zlecenie</a>
     </div>
 </div>

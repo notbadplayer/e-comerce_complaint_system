@@ -40,7 +40,7 @@ class TaskModel extends AppModel implements ModelInterface
             $created = $this->connection->quote($taskData['created']);
             $customer = $this->connection->quote($taskData['customer']);
             $receipt = $this->connection->quote($taskData['receipt']);
-            $email = $this->connection->quote($taskData['customerEmail']);
+            $email = $this->connection->quote($taskData['email']);
             $object = $this->connection->quote($taskData['object']);
             $type = $this->connection->quote($taskData['type']);
             $priority = $this->connection->quote($taskData['priority']);
@@ -84,10 +84,12 @@ class TaskModel extends AppModel implements ModelInterface
     public function delete(int $id): void
     {
         try {
-            $query = "DELETE FROM articles WHERE id = $id LIMIT 1";
-            $this->connection->exec($query);
+            $move = "INSERT INTO archive SELECT * FROM current_entries WHERE id = $id";
+            $this->connection->exec($move);
+            $delete = "DELETE FROM current_entries WHERE id = $id LIMIT 1";
+            $this->connection->exec($delete);
         } catch (throwable $e) {
-            throw new AppException('Błąd podczas usuwania artykułu');
+            throw new AppException('Błąd podczas usuwania zlecenia');
         }
     }
 
@@ -105,7 +107,7 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function changeParam(string $id, string $taskAction, string $actionMessage, string $previousValue, string $updatedValue, ?string $comment)
+    public function changeParam(string $id, string $taskAction, string $actionMessage, string $previousValue, string $updatedValue, ?string $comment): void
     {
         try {
             $id = $this->connection->quote($id);
@@ -127,5 +129,35 @@ class TaskModel extends AppModel implements ModelInterface
             throw new AppException('Błąd przy zmianie parametru zlecenia.');
         }
 
+    }
+
+    public function addParam(string $id, string $event, string $comment): void
+    {
+        try {
+            $id = $this->connection->quote($id);
+            $history = $this->connection->quote(json_encode(
+                array(
+                    date('Y-m-d H:i:s') => [
+                        'action' => $event,
+                        'comment' => $comment,
+                    ]
+                )
+            ));
+            $query = "UPDATE current_entries SET history = JSON_MERGE_PATCH(history, $history) WHERE id = $id";
+            $this->connection->exec($query);
+        } catch (throwable $e) {
+            throw new AppException('Błąd przy dodawaniu parametru zlecenia.');
+        }
+    }
+
+    public function listArchive(): array
+    {
+        try {
+            $query = "SELECT id, number, customer, type, priority, status FROM archive";
+            $entries = $this->connection->query($query);
+            return $entries->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            throw new AppException('Błąd pobierania listy zleceń archiwalnych');
+        }
     }
 }

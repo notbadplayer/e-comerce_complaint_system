@@ -18,6 +18,12 @@ switch ($params['status'] ?? '') {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
         break;
+    case 'paramAdded':
+        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+            Dodano parametr do zlecenia. Dopisano do historii.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+        break;
 }
 ?>
 <div class="card" style="min-height: 80vh;">
@@ -141,8 +147,11 @@ switch ($params['status'] ?? '') {
 
 
 
-            <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
+            <button type="submit" class="btn btn-primary me-3 mt-4 d-inline-block"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
+            <a class="text-decoration-none btn btn-primary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskOtherPopup"><i class="fas fa-feather-alt me-2"></i>Dodaj inne zdarzenie</a>
+            <a class="text-decoration-none btn btn-secondary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskArchivePopup"><i class="fas fa-archive me-2"></i>Przenieś do archiwum</a>
         </form>
+        
 
         <div class="card mt-5">
             <div class="card-header">

@@ -117,3 +117,48 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="taskOtherPopup" tabindex="-1" aria-labelledby="taskOtherPopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dodaj niestandardowe zdarzenie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/?action=addParam">
+                <input type="hidden" name="id" value="<?php echo $taskData['id'] ?? '' ?>" />
+                <div class="modal-body">
+                    <label for="event" class="col-form-label-sm">Nazwa zdarzenia:</label>
+                    <input name="event" type="text" class="form-control form-control-sm" id="term" placeholder="wpisz nazwę zdarzenia">
+                    <label for="comment" class="col-form-label-sm">Dodatkowe informacje:</label>
+                    <input type="text" class="form-control form-control-sm mb-5" id="comment" name="comment" placeholder="Tutaj można wpisać dodatkowy komentarz" maxlength="100">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="taskArchivePopup" tabindex="-1" aria-labelledby="taskArchivePopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Czy chcesz przenieść do archiwum?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Zlecenia w archiwum są bezpieczne, i można będzie je przeglądać.</span>
+                <form method="post" action="/?action=delete">
+                    <input type="hidden" name="id" value="<?php echo $taskData['id'] ?? '' ?>" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

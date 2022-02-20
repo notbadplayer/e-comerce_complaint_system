@@ -24,6 +24,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
                     <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
+                    <a class="nav-link" href="/?action=previewArchive">Przeglądaj archiwum</a>
                 </div>
             </div>
         </div>

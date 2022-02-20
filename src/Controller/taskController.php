@@ -29,7 +29,7 @@ class TaskController extends AppController
                 'created' => date('Y-m-d'),
                 'customer' => $this->request->postParam('customer'),
                 'receipt' => $this->request->postParam('receipt'),
-                'customerEmail' => $this->request->postParam('customerEmail'),
+                'email' => $this->request->postParam('customerEmail'),
                 'object' => $this->request->postParam('object'),
                 'type' => $this->request->postParam('type'),
                 'priority' => $this->request->postParam('priority'),
@@ -97,11 +97,11 @@ class TaskController extends AppController
     {
         $articleId = $this->request->postParam('id');
         $this->taskModel->delete((int) $articleId);
-        header('location:/?status=deleted');
+        header('location:/?status=archived');
         exit();
     }
 
-    public function changeParam()
+    public function changeParam(): void
     {
         if ($this->request->hasPost()) {
             $taskAction = $this->request->postParam('taskAction');
@@ -121,7 +121,6 @@ class TaskController extends AppController
                     break;
             }
 
-
             $this->taskModel->changeParam(
                 $this->request->postParam('id'),
                 $taskAction,
@@ -133,5 +132,25 @@ class TaskController extends AppController
             header("location:/?action=edit&id=".$this->request->postParam('id')."&status=paramChanged");
             exit();
         }
+    }
+
+    public function addParam(): void
+    {
+        if ($this->request->hasPost()) {
+            $this->taskModel->addParam(
+                $this->request->postParam('id'),
+                $this->request->postParam('event'),
+                $this->request->postParam('comment')
+            );
+            header("location:/?action=edit&id=".$this->request->postParam('id')."&status=paramAdded");
+            exit();
+        }
+    }
+
+    public function previewArchive(): void
+    {
+        $this->view->render('archive', [
+            'tasks' => $this->taskModel->listArchive(),
+        ]);
     }
 }
