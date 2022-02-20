@@ -45,4 +45,23 @@ class AppModel
             throw new AppException('Problem z połączeniem do bazy danych');
         }
     }
+
+    public function validateLogin(string $user, string $password)
+    {
+        try {
+            $user = $this->connection->quote($user);
+            $password = $this->connection->quote($password);
+            $query = "SELECT count(*) FROM users WHERE user = $user AND password = $password";
+            $result = $this->connection->query($query);
+            $count = $result->fetchColumn();
+            if ($count>0){
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch (Throwable $e) {
+            throw new AppException('Błąd podczas połączenia z bazą użytkowników');
+        }
+    }
 }

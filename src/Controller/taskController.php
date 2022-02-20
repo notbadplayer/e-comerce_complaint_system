@@ -8,6 +8,7 @@ class TaskController extends AppController
 {
     public function list(): void
     {
+        $this->validateLogin();
         $this->view->render('list', [
             'tasks' => $this->taskModel->list(),
             'status' => $this->request->getParam('status'),
@@ -24,6 +25,7 @@ class TaskController extends AppController
 
     public function add(): void
     {
+        $this->validateLogin();
         if ($this->request->hasPost()) {
             $taskData = [
                 'created' => date('Y-m-d'),
@@ -60,6 +62,7 @@ class TaskController extends AppController
 
     public function edit(): void
     {
+        $this->validateLogin();
         if ($this->request->hasPost()) {
             $taskId = (int) $this->request->postParam('id');
             $taskData= $this->taskModel->get($taskId);
@@ -95,6 +98,7 @@ class TaskController extends AppController
 
     public function delete(): void
     {
+        $this->validateLogin();
         $taskId = $this->request->postParam('id');
         $this->taskModel->delete((int) $taskId);
         header('location:/?status=archived');
@@ -103,6 +107,7 @@ class TaskController extends AppController
 
     public function changeParam(): void
     {
+        $this->validateLogin();
         if ($this->request->hasPost()) {
             $taskAction = $this->request->postParam('taskAction');
             $actionMessage = '';
@@ -136,6 +141,7 @@ class TaskController extends AppController
 
     public function addParam(): void
     {
+        $this->validateLogin();
         if ($this->request->hasPost()) {
             $this->taskModel->addParam(
                 $this->request->postParam('id'),
@@ -149,6 +155,7 @@ class TaskController extends AppController
 
     public function listArchive(): void
     {
+        $this->validateLogin();
         $this->view->render('archive', [
             'tasks' => $this->taskModel->listArchive(),
         ]);
@@ -156,6 +163,7 @@ class TaskController extends AppController
 
     public function showArchived(): void
     {
+        $this->validateLogin();
         $taskId = (int) $this->request->getParam('id');
         $this->view->render('show', [
             'taskData' => $this->taskModel->getArchived($taskId),

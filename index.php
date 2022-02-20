@@ -10,7 +10,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 $request = new Request($_GET, $_POST);
 
-
 try{
     (new TaskController($request))->run();
 } catch(appException $e) {

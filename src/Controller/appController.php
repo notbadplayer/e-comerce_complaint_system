@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -7,6 +8,8 @@ use App\Model\TaskModel;
 use App\Request;
 use App\Validate;
 use App\View\View;
+
+session_start();
 
 abstract class AppController
 {
@@ -37,5 +40,35 @@ abstract class AppController
     private function getAction(): string
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
+    }
+
+    protected function validateLogin(): void
+    {
+        if (!isset($_SESSION['login'])) {
+            $this->view->login();
+            exit();
+        }
+    }
+
+    public function login()
+    {
+        if ($this->request->hasPost()) {
+            $validatedUser = $this->taskModel->validateLogin($this->request->postParam('username'), $this->request->postParam('password'));
+            if ($validatedUser) {
+                $_SESSION['login'] = $this->request->postParam('username');
+                header("location:/");
+                exit();
+            } else {
+                $this->view->login('Nieprawidłowa nazwa użytkownika lub hasło.');
+            exit();
+            }
+        }
+    }
+
+    public function logout()
+    {
+        session_destroy();
+        header("location:/");
+        exit();
     }
 }

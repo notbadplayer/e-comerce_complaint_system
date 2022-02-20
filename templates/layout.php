@@ -12,7 +12,6 @@
 
 <body>
     <script src="src/Libraries/bootstrap/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary mb-5">
         <div class="container-fluid">
             <a class="navbar-brand me-5" href="/">
@@ -20,20 +19,32 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <?php if(!empty($_SESSION['login'])): ?>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
                     <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
                     <a class="nav-link" href="/?action=listArchive">Przeglądaj archiwum</a>
                 </div>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropstart">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?php echo $_SESSION['login']?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/?action=logout">Wyloguj się</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
+            <?php endif; ?>
         </div>
     </nav>
 
     <div class="container">
-        <?php 
-        require_once("templates/pages/$page.php"); 
-        require_once("templates/pages/popups.php"); 
+        <?php
+        require_once("templates/pages/$page.php");
+        require_once("templates/pages/popups.php");
         ?>
     </div>
 </body>
