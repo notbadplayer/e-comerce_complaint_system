@@ -44,6 +44,7 @@ class TaskController extends AppController
                 $this->view->render('add', [
                     'entryNumber' => $this->taskModel->generateNumber(),
                     'date' => $taskData['term'],
+                    'created' => date('Y-m-d'),
                     'taskData' =>  $taskData,
                     'messages' => $validatedTask['messages']
                 ]);

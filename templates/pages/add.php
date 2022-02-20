@@ -37,7 +37,7 @@ $taskData = $params['taskData'] ?? [];
 
                 <label for="customerEmail" class="col-lg-2 col-form-label-sm">e-mail klienta:</label>
                 <div class="col-lg-4">
-                    <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['customerEmail'] ?? '' ?>">
+                    <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
                     <?php foreach ($messages['email'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
@@ -112,8 +112,6 @@ $taskData = $params['taskData'] ?? [];
                     <?php endforeach; ?>
                 </div>
             </div>
-
-
 
             <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-plus me-2"></i>Dodaj</button>
         </form>

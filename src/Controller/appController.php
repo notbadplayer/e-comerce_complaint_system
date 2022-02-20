@@ -72,3 +72,4 @@ abstract class AppController
         exit();
     }
 }
+//© K.Rogaczewski
