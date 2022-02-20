@@ -1,19 +1,5 @@
 <?php
 $tasks = $params['tasks'] ?? [];
-switch ($params['status']) {
-    case 'added':
-        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
-        Zlecenie zostało dodane.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        break;
-    case 'archived':
-        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
-        Zlecenie zostało zarchiwizowane.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-        break;
-}
 ?>
 
 <div class="card" style="min-height: 80vh;">
@@ -37,13 +23,12 @@ switch ($params['status']) {
                 <?php foreach ($tasks as $task) : ?>
                     <tr>
                         <td><?php echo $task['number'] ?></td>
-                        <td><?php echo $task['customer'] ?></td>
+                        <td class="text-wrap"><?php echo $task['customer'] ?></td>
                         <td class="d-none d-lg-table-cell"><?php echo $task['type'] ?></td>
                         <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
                         <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
                         <td>
-                            <a href="/?action=show&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
-                            <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
+                            <a href="/?action=showArchived&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

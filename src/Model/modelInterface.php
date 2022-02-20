@@ -9,9 +9,9 @@ interface ModelInterface
 
     public function get(int $id): array;
     
-    public function add(array $articleData): void;
+    public function add(array $taskData): void;
     
-    public function edit(array $articleData): void;
+    public function edit(array $taskData): void;
     
     public function delete(int $id): void;
 }

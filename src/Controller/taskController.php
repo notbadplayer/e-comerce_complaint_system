@@ -95,8 +95,8 @@ class TaskController extends AppController
 
     public function delete(): void
     {
-        $articleId = $this->request->postParam('id');
-        $this->taskModel->delete((int) $articleId);
+        $taskId = $this->request->postParam('id');
+        $this->taskModel->delete((int) $taskId);
         header('location:/?status=archived');
         exit();
     }
@@ -147,10 +147,18 @@ class TaskController extends AppController
         }
     }
 
-    public function previewArchive(): void
+    public function listArchive(): void
     {
         $this->view->render('archive', [
             'tasks' => $this->taskModel->listArchive(),
+        ]);
+    }
+
+    public function showArchived(): void
+    {
+        $taskId = (int) $this->request->getParam('id');
+        $this->view->render('show', [
+            'taskData' => $this->taskModel->getArchived($taskId),
         ]);
     }
 }

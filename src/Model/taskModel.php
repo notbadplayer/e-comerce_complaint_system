@@ -96,10 +96,9 @@ class TaskModel extends AppModel implements ModelInterface
     public function generateNumber(): ?string
     {
         try {
-            $query = "SELECT MAX(id) FROM current_entries";
+            $query = "SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'current_entries'";
             $number = $this->connection->query($query);
             $number = (int) $number->fetch(PDO::FETCH_COLUMN);
-            $number++;
             $entryNumber = $number . '/' . date('Y');
             return $entryNumber;
         } catch (throwable $e) {
@@ -158,6 +157,17 @@ class TaskModel extends AppModel implements ModelInterface
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
             throw new AppException('Błąd pobierania listy zleceń archiwalnych');
+        }
+    }
+
+    public function getArchived(int $id): array
+    {
+        try {
+            $query = "SELECT * FROM archive WHERE id=$id";
+            $task = $this->connection->query($query);
+            return $task->fetch(PDO::FETCH_ASSOC);
+        } catch (Throwable $e) {
+            throw new AppException('Błąd pobierania zlecenia z archiwum');
         }
     }
 }

@@ -24,7 +24,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
                     <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
-                    <a class="nav-link" href="/?action=previewArchive">Przeglądaj archiwum</a>
+                    <a class="nav-link" href="/?action=listArchive">Przeglądaj archiwum</a>
                 </div>
             </div>
         </div>
@@ -33,7 +33,6 @@
     <div class="container">
         <?php 
         require_once("templates/pages/$page.php"); 
-        require_once("templates/pages/delete.php"); 
         require_once("templates/pages/popups.php"); 
         ?>
     </div>

@@ -37,7 +37,7 @@ switch ($params['status']) {
                 <?php foreach ($tasks as $task) : ?>
                     <tr>
                         <td><?php echo $task['number'] ?></td>
-                        <td><?php echo $task['customer'] ?></td>
+                        <td class="text-wrap"><?php echo $task['customer'] ?></td>
                         <td class="d-none d-lg-table-cell"><?php echo $task['type'] ?></td>
                         <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
                         <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
