@@ -4,6 +4,8 @@ declare(Strict_types=1);
 
 namespace App;
 
+use App\Controller\fileController;
+
 class Validate
 {
     private bool $pass;
@@ -19,8 +21,9 @@ class Validate
         $this->descriptionRules($data['description']);
         $this->emailRules($data['email']);
         $this->receiptRules($data['receipt']);
+        $this->fileRules($data['file']);
 
-        if(isset($data['term'])){ //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
+        if (isset($data['term'])) { //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
             $this->termRules($data['term'], $data['created']);
         }
 
@@ -91,6 +94,22 @@ class Validate
         } elseif (strtotime($param) < strtotime($comparisionData)) {
             $this->messages['term'][] = "Termin zlecenia nie może być starszy niż jego utworzenie";
             $this->pass = false;
+        }
+    }
+
+    //Walidacja plików:
+    private function fileRules(fileController $param): void
+    {
+        if ($param->getFileSize()) { //jeżeli plik jest dodany to waludujemy, jeśli nie, to pomijam walidację
+            $acceptedFileTypes = ['pdf', 'jpg', 'jpeg', 'png', 'doc',];
+            $maxFileSize = 4096; //max rozmiar pliku w KB 
+            if (!(in_array($param->getFileType(), $acceptedFileTypes))) {
+                $this->messages['file'][] = "Niedozwolony typ pliku. Dozwolone rozrzerzenia to: " . implode(", ", $acceptedFileTypes);
+                $this->pass = false;
+            } elseif ($param->getFileSize() >= $maxFileSize) {
+                $this->messages['file'][] = "Maksymalny rozmiar pliku to: " . ($maxFileSize / 1024) . " MB";
+                $this->pass = false;
+            }
         }
     }
 }

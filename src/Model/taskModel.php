@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Controller\fileController;
 use App\Exceptions\AppException;
 use App\Model\AppModel;
 use Throwable;
@@ -56,8 +57,20 @@ class TaskModel extends AppModel implements ModelInterface
                 )
             ));
 
-            $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history)";
+            $files = $this->connection->quote('');
+            if($taskData['file']){
+                $files = $this->connection->quote(json_encode(
+                    array(
+                        $taskData['file']->getFile()['name'] => [
+                            'location' => $taskData['file']->getLocation(),
+                            'created' => date('Y-m-d H:i:s')
+                        ]
+                    )
+                ));
+            }
+            $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history, files) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history, $files)";
             $this->connection->exec($query);
+      
         } catch (Throwable $e) {
             exit($e);
             throw new AppException('Błąd podczas dodawania nowego zlecenia');
@@ -169,5 +182,17 @@ class TaskModel extends AppModel implements ModelInterface
         } catch (Throwable $e) {
             throw new AppException('Błąd pobierania zlecenia z archiwum');
         }
+    }
+
+    public function deleteFile(string $fileName, int $id): void
+    {
+        try {
+            $fileName = $this->connection->quote($fileName);
+            $query = "UPDATE current_entries SET files = JSON_REMOVE(files, $fileName) WHERE id = $id";
+            $this->connection->exec($query);
+        } catch (throwable $e) {
+            throw new AppException('Błąd przy usuwaniu pliku z bazy danych');
+        }
+
     }
 }

@@ -162,3 +162,26 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="taskFileDelete" tabindex="-1" aria-labelledby="taskFileDelete" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Usunąć plik?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Załącznik <?php echo $file ?> zostanie usunięty.</span>
+                <form method="post" action="/?action=deleteFile">
+                    <input type="hidden" name="fileName" value="<?php echo $file ?>" />
+                    <input type="hidden" name="id" value="<?php echo $taskData['id']?>" />
+                    <input type="hidden" name="location" value="<?php echo $value->location ?>" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

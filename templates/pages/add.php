@@ -13,7 +13,7 @@ $taskData = $params['taskData'] ?? [];
     </div>
 
     <div class="card-body p-5">
-        <form method="post" action="/?action=add">
+        <form method="post" action="/?action=add" enctype="multipart/form-data">
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
                 <div class="col-lg-4">
@@ -108,6 +108,16 @@ $taskData = $params['taskData'] ?? [];
                 <div class="col-sm-10">
                     <input type="text" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>">
                     <?php foreach ($messages['description'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="file" class="col-lg-2 col-form-label-sm">Załącznik:</label>
+                <div class="col-lg-4">
+                    <input type="file" class="form-control form-control-sm <?php echo (isset($messages['file']) ? 'is-invalid' : '') ?>" id="file" name="file">
+                    <?php foreach ($messages['file'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
                 </div>

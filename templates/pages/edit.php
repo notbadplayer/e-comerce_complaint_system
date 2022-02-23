@@ -1,8 +1,9 @@
 <?php
 $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
-
-$historytoDecode = str_replace('&quot;', '"', $taskData['history']);
+$filestoDecode = str_replace('&quot;', '"', $taskData['files']);
+$files = json_Decode($filestoDecode, true);
+$historytoDecode = (str_replace('&quot;', '"', $taskData['history']));
 $history = json_decode($historytoDecode, true);
 
 switch ($params['status'] ?? '') {
@@ -62,7 +63,7 @@ switch ($params['status'] ?? '') {
 
                 <label for="customerEmail" class="col-lg-2 col-form-label-sm">e-mail klienta:</label>
                 <div class="col-lg-4">
-                        <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
+                    <input type="text" name="customerEmail" class="form-control form-control-sm <?php echo (isset($messages['email']) ? 'is-invalid' : '') ?>" id="customerEmail" placeholder="email klienta" value="<?php echo $taskData['email'] ?? '' ?>">
                     <?php foreach ($messages['email'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
@@ -80,7 +81,7 @@ switch ($params['status'] ?? '') {
 
                 <label for="receipt" class="col-lg-2 col-form-label-sm">numer paragonu:</label>
                 <div class="col-lg-4">
-                        <input type="text" class="form-control form-control-sm <?php echo (isset($messages['receipt']) ? 'is-invalid' : '') ?>" id="receipt" placeholder="nr dokumentu sprzedaży" name="receipt" value="<?php echo $taskData['receipt'] ?? '' ?>">
+                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['receipt']) ? 'is-invalid' : '') ?>" id="receipt" placeholder="nr dokumentu sprzedaży" name="receipt" value="<?php echo $taskData['receipt'] ?? '' ?>">
                     <?php foreach ($messages['receipt'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
@@ -145,13 +146,33 @@ switch ($params['status'] ?? '') {
                 </div>
             </div>
 
+                <div class="row mt-5 mb-2">
+                    <span>Lista dołączonych plików:</span>
+                    <?php if (is_array($files)) : ?>
+                    <ul class="list-unstyled">
+                        <?php foreach ($files as $file => $value) : ?>
+                            <li>
+                                <a class="text-decoration-none" href="<?php echo $value->location ?>"><?php echo $file ?></a>
+                                <a class="text-decoration-none link-danger" data-bs-toggle="modal" data-bs-target="#taskFileDelete"><i class="far fa-trash-alt ms-2"></i></a>
+
+
+                            </li>
+
+                        <?php endforeach ?>
+                    </ul>
+                    <?php else: ?>
+                        <span>Brak</span>
+                    <?php endif; ?>
+                </div>
+  
+
 
 
             <button type="submit" class="btn btn-primary me-3 mt-4 d-inline-block"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
             <a class="text-decoration-none btn btn-primary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskOtherPopup"><i class="fas fa-feather-alt me-2"></i>Dodaj inne zdarzenie</a>
             <a class="text-decoration-none btn btn-secondary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskArchivePopup"><i class="fas fa-archive me-2"></i>Przenieś do archiwum</a>
         </form>
-        
+
 
         <div class="card mt-5">
             <div class="card-header">

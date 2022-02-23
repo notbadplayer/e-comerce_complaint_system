@@ -38,7 +38,10 @@ class TaskController extends AppController
                 'status' => 'Przyjęte',
                 'term' => $this->request->postParam('term'),
                 'description' => $this->request->postParam('description'),
+                'file' => new fileController($_FILES['file']), //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
             ];
+
+            //WALIDACJA PÓL FORMULARZY
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
                 $this->view->render('add', [
@@ -50,10 +53,19 @@ class TaskController extends AppController
                 ]);
                 exit();
             }
-            $this->taskModel->add($taskData);
+            //jeżeli wczytano plik to też go dodajemy
+            if ($taskData['file']->getFileSize()) { 
+                $taskData['file']->storeFile();
+            } else {
+                $taskData['file'] = null;
+            }
+
+            $this->taskModel->add($taskData); //dodajemy wpis do bazy danych
+            //po dodaniu danych, przekierowanie na stronę gówną
             header('location:/?status=added');
             exit();
         }
+        //PIERWSZE WEJŚCIE DO FUNKCJI, JESZCZE BEZ POBRANYCH FORMULARZY
         $this->view->render('add', [
             'entryNumber' => $this->taskModel->generateNumber(),
             'created' => date('Y-m-d'),
@@ -66,14 +78,14 @@ class TaskController extends AppController
         $this->validateLogin();
         if ($this->request->hasPost()) {
             $taskId = (int) $this->request->postParam('id');
-            $taskData= $this->taskModel->get($taskId);
+            $taskData = $this->taskModel->get($taskId);
             //jeśli edytujemy dane, to tylko niektóre pola, trzeba więc pobrać jeszcze raz wszystkie rekordy, a potem do nich dopisać dane z formularza
-            $taskData ['customer'] = $this->request->postParam('customer');
-            $taskData ['receipt'] = $this->request->postParam('receipt');
-            $taskData ['email'] = $this->request->postParam('customerEmail');
-            $taskData ['object'] = $this->request->postParam('object');
-            $taskData ['description'] = $this->request->postParam('description');
-            $taskData ['id'] = $taskId;
+            $taskData['customer'] = $this->request->postParam('customer');
+            $taskData['receipt'] = $this->request->postParam('receipt');
+            $taskData['email'] = $this->request->postParam('customerEmail');
+            $taskData['object'] = $this->request->postParam('object');
+            $taskData['description'] = $this->request->postParam('description');
+            $taskData['id'] = $taskId;
 
             $validatedTask = $this->validator->validate($taskData);
             if (!$validatedTask['pass']) {
@@ -86,11 +98,11 @@ class TaskController extends AppController
                 exit();
             }
             $this->taskModel->edit($taskData);
-            header("location:/?action=edit&id=".$taskId."&status=edited");
+            header("location:/?action=edit&id=" . $taskId . "&status=edited");
             exit();
         }
         $taskId = (int) $this->request->getParam('id');
-        $taskData= $this->taskModel->get($taskId);
+        $taskData = $this->taskModel->get($taskId);
         $this->view->render('edit', [
             'taskData' => $taskData,
             'status' => $this->request->getParam('status'),
@@ -135,7 +147,7 @@ class TaskController extends AppController
                 $this->request->postParam('updatedValue'),
                 $this->request->postParam('comment')
             );
-            header("location:/?action=edit&id=".$this->request->postParam('id')."&status=paramChanged");
+            header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");
             exit();
         }
     }
@@ -149,7 +161,7 @@ class TaskController extends AppController
                 $this->request->postParam('event'),
                 $this->request->postParam('comment')
             );
-            header("location:/?action=edit&id=".$this->request->postParam('id')."&status=paramAdded");
+            header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramAdded");
             exit();
         }
     }
@@ -169,5 +181,18 @@ class TaskController extends AppController
         $this->view->render('show', [
             'taskData' => $this->taskModel->getArchived($taskId),
         ]);
+    }
+
+    public function deleteFile(): void
+    {
+        $location = $this->request->postParam('location');
+        exit($location);
+        $fileName = $this->request->postParam('fileName');
+        $taskId = (int) $this->request->postParam('id');
+        $this->taskModel->deleteFile($fileName, $taskId);
+        
+
+        header('location:/?status=archived');
+        exit();
     }
 }

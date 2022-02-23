@@ -19,8 +19,10 @@ class View
                 $escapedParams[$key] =$this->escape($value);
             } elseif (is_int($value) || is_null($value)) {
                 $escapedParams[$key] = $value;
-            } else {
+            } elseif (is_string($value)) {
                 $escapedParams[$key] = htmlentities($value);
+            } else {
+                $escapedParams[$key] = ($value);
             }
         }
         return $escapedParams;

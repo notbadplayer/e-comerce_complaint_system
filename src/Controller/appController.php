@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\FileModel;
 use App\Model\TaskModel;
 use App\Request;
 use App\Validate;
@@ -21,6 +22,7 @@ abstract class AppController
     protected View $view;
     protected TaskModel $taskModel;
     protected Validate $validator;
+    protected fileController $fileController;
 
     public function __construct(Request $request)
     {
