@@ -8,20 +8,17 @@ use App\Controller\fileController;
 
 class Validate
 {
-    private bool $pass;
-    private array $messages;
-
     public function validate(array $data): array
     {
         $this->pass = true;
         $this->messages = [];
 
-        $this->customerRules($data['customer']);
-        $this->objectRules($data['object']);
-        $this->descriptionRules($data['description']);
-        $this->emailRules($data['email']);
-        $this->receiptRules($data['receipt']);
-        $this->fileRules($data['file']);
+        (isset($data['customer']) ? $this->customerRules($data['customer']) : false);
+        (isset($data['object']) ? $this->objectRules($data['object']) : false);
+        (isset($data['description']) ? $this->descriptionRules($data['description']): false);
+        (isset($data['email']) ? $this->emailRules($data['email']) : false);
+        (isset($data['receipt']) ? $this->receiptRules($data['receipt']) : false);
+        (isset($data['file']) ? $this->fileRules($data['file']) : false);
 
         if (isset($data['term'])) { //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
             $this->termRules($data['term'], $data['created']);
@@ -101,8 +98,8 @@ class Validate
     private function fileRules(fileController $param): void
     {
         if ($param->getFileSize()) { //jeżeli plik jest dodany to waludujemy, jeśli nie, to pomijam walidację
-            $acceptedFileTypes = ['pdf', 'jpg', 'jpeg', 'png', 'doc',];
-            $maxFileSize = 4096; //max rozmiar pliku w KB 
+            $acceptedFileTypes = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx',];
+            $maxFileSize = 1024; //max rozmiar pliku w KB 
             if (!(in_array($param->getFileType(), $acceptedFileTypes))) {
                 $this->messages['file'][] = "Niedozwolony typ pliku. Dozwolone rozrzerzenia to: " . implode(", ", $acceptedFileTypes);
                 $this->pass = false;

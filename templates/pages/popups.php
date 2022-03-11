@@ -171,11 +171,53 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <span>Załącznik <?php echo $file ?> zostanie usunięty.</span>
+                <span>Załącznik <span id="fileNameField"></span> zostanie usunięty.</span>
                 <form method="post" action="/?action=deleteFile">
-                    <input type="hidden" name="fileName" value="<?php echo $file ?>" />
-                    <input type="hidden" name="id" value="<?php echo $taskData['id']?>" />
-                    <input type="hidden" name="location" value="<?php echo $value->location ?>" />
+                    <input type="hidden" name="id" value="<?php echo $taskData['id'] ?>" />
+                    <input type="hidden" id="fileId" name="fileId" />
+                    <input type="hidden" id="location" name="location" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    //Tutaj jest logika przekazywania parametrów do wyskakującego okienka, ona musi byc , bo w pętli wartości są nadpisywane :(
+    var taskFileDeleteModal = document.getElementById('taskFileDelete')
+    taskFileDeleteModal.addEventListener('show.bs.modal', function(event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        var fileName = button.getAttribute('data-bs-filename')
+        var filenameField = document.getElementById('fileNameField')
+        filenameField.textContent = fileName;
+
+        var fileId = button.getAttribute('data-bs-fileId')
+        var fileIdInput = document.getElementById('fileId')
+        fileIdInput.value = fileId
+
+        var location = button.getAttribute('data-bs-location')
+        var locationInput = document.getElementById('location')
+        locationInput.value = location
+    })
+</script>
+
+<div class="modal fade" id="taskAddFile" tabindex="-1" aria-labelledby="taskAddFile" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dodawanie załącznika</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/?action=addFile" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<?php echo $taskData['id'] ?>" />
+                    <input type="file" class="form-control form-control-sm" id="file" name="file">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>

@@ -2,7 +2,7 @@
 $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
 $filestoDecode = str_replace('&quot;', '"', $taskData['files']);
-$files = json_Decode($filestoDecode, true);
+$files = json_Decode($filestoDecode, true) ?? [];
 $historytoDecode = (str_replace('&quot;', '"', $taskData['history']));
 $history = json_decode($historytoDecode, true);
 
@@ -25,8 +25,15 @@ switch ($params['status'] ?? '') {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>';
         break;
+    case 'fileAddError':
+        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Błąd dodawania pliku.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+        break;
 }
 ?>
+
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
@@ -43,7 +50,7 @@ switch ($params['status'] ?? '') {
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo $taskData['number'] ?? '' ?>" disabled>
+                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo str_replace("-", "/", $taskData['number']) ?>" disabled>
                 </div>
 
                 <label for="created" class="col-lg-2 col-form-label-sm">Data zlecenia:</label>
@@ -146,25 +153,26 @@ switch ($params['status'] ?? '') {
                 </div>
             </div>
 
-                <div class="row mt-5 mb-2">
-                    <span>Lista dołączonych plików:</span>
-                    <?php if (is_array($files)) : ?>
+            <div class="row mt-5 mb-2 border rounded <?php echo (isset($messages['file']) ? 'border border-danger' : '') ?>">
+                <div class="d-inline fs-6 ">Lista dołączonych plików: <a class="btn btn-sm fs-5 link-primary" data-bs-toggle="modal" data-bs-target="#taskAddFile"><i class="fas fa-plus-circle"></i></a></div>
+                <?php foreach ($messages['file'] ?? [] as $message) : ?>
+                        <span class="text-danger"><?php echo $message ?></span>
+                <?php endforeach; ?>
+                <?php if (count($files)) : ?>
                     <ul class="list-unstyled">
-                        <?php foreach ($files as $file => $value) : ?>
+                        <?php foreach ($files as $file => $fileValue) : ?>
                             <li>
-                                <a class="text-decoration-none" href="<?php echo $value->location ?>"><?php echo $file ?></a>
-                                <a class="text-decoration-none link-danger" data-bs-toggle="modal" data-bs-target="#taskFileDelete"><i class="far fa-trash-alt ms-2"></i></a>
-
-
+                                <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><?php echo $fileValue['filename'] ?></a>
+                                <a class="text-decoration-none link-danger" data-bs-toggle="modal" data-bs-target="#taskFileDelete" data-bs-filename="<?php echo $fileValue['filename']?>" data-bs-location="<?php echo $fileValue['location']?>" data-bs-fileId="<?php echo $file?>">
+                                    <i class="far fa-trash-alt ms-2"></i></a>
                             </li>
-
-                        <?php endforeach ?>
+                        <?php endforeach; ?>
                     </ul>
-                    <?php else: ?>
-                        <span>Brak</span>
-                    <?php endif; ?>
-                </div>
-  
+                <?php else : ?>
+                    <span class="text-muted">Brak dodanych załączników</span>
+                <?php endif; ?>
+            </div>
+
 
 
 

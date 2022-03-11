@@ -17,7 +17,7 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo $params['entryNumber'] ?? '' ?>" disabled>
+                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo str_replace("-", "/", $params['entryNumber']) ?>" disabled>
                 </div>
 
                 <label for="created" class="col-lg-2 col-form-label-sm">Data zlecenia:</label>

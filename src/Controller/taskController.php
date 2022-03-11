@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exceptions\AppException;
+
 class TaskController extends AppController
 {
     public function list(): void
@@ -54,7 +56,7 @@ class TaskController extends AppController
                 exit();
             }
             //jeżeli wczytano plik to też go dodajemy
-            if ($taskData['file']->getFileSize()) { 
+            if ($taskData['file']->getFileSize()) {
                 $taskData['file']->storeFile();
             } else {
                 $taskData['file'] = null;
@@ -185,14 +187,48 @@ class TaskController extends AppController
 
     public function deleteFile(): void
     {
-        $location = $this->request->postParam('location');
-        exit($location);
-        $fileName = $this->request->postParam('fileName');
-        $taskId = (int) $this->request->postParam('id');
-        $this->taskModel->deleteFile($fileName, $taskId);
-        
+        if ($this->request->hasPost()) {
+            $taskId = (int) $this->request->postParam('id');
+            $fileId = $this->request->postParam('fileId');
+            $location = $this->request->postParam('location');
 
-        header('location:/?status=archived');
-        exit();
+            $this->taskModel->deleteFile($fileId, $taskId); //wyrzucenie wpisu z bazy danych
+            if (!unlink($location)) { //fizyczne usunięcie pliku z zasobu
+                throw new AppException('Błąd podczas usuwania pliku');
+            }
+
+            header('location:/?status=archived');
+            exit();
+        }
+    }
+
+    public function addFile(): void
+    {
+        if ($this->request->hasPost()) {
+            $taskData['file'] = new fileController($_FILES['file']); //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
+            $validatedFile = $this->validator->validate($taskData);
+            if (!$validatedFile['pass']) {
+                $taskId = (int) $this->request->postParam('id');
+                $taskData = $this->taskModel->get($taskId);
+                $this->view->render('edit', [
+                    'taskData' => $taskData,
+                    'status' => 'fileAddError',
+                    'messages' => $validatedFile['messages']
+                ]);
+
+            }
+            //Jeżeli przeszliśmy walidację plików:
+            $taskId = (int) $this->request->postParam('id');
+            //jeżeli wczytano plik to też go dodajemy
+            if ($taskData['file']->getFileSize()) {
+                $taskData['file']->storeFile();
+                $this->taskModel->addFile($taskId, $taskData['file']); //dodanie informacji o pliku do bazy danych
+
+            } else {
+                throw new AppException('Błąd podczas dodawania pliku');
+            }
+            header('location:/?status=archived');
+            exit();
+        }
     }
 }

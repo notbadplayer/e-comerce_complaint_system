@@ -58,19 +58,18 @@ class TaskModel extends AppModel implements ModelInterface
             ));
 
             $files = $this->connection->quote('');
-            if($taskData['file']){
+            if ($taskData['file']) {
                 $files = $this->connection->quote(json_encode(
                     array(
-                        $taskData['file']->getFile()['name'] => [
+                        date('Y-m-d H:i:s') => [
+                            'filename' => $taskData['file']->getFile()['name'],
                             'location' => $taskData['file']->getLocation(),
-                            'created' => date('Y-m-d H:i:s')
                         ]
                     )
                 ));
             }
             $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history, files) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history, $files)";
             $this->connection->exec($query);
-      
         } catch (Throwable $e) {
             exit($e);
             throw new AppException('Błąd podczas dodawania nowego zlecenia');
@@ -109,13 +108,26 @@ class TaskModel extends AppModel implements ModelInterface
     public function generateNumber(): ?string
     {
         try {
-            $query = "SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'current_entries'";
-            $number = $this->connection->query($query);
-            $number = (int) $number->fetch(PDO::FETCH_COLUMN);
-            $entryNumber = $number . '/' . date('Y');
-            return $entryNumber;
+            $query = "SELECT number FROM current_entries ORDER BY id DESC LIMIT 1";
+            $numberFromDb = $this->connection->query($query);
+            $numberFromDb = $numberFromDb->fetch(PDO::FETCH_COLUMN);
+            if (!($numberFromDb)) { //jeśli baza jest pusta
+                $number = '1-' . date('Y');
+                return $number;
+                exit();
+            }
+            $explodedNumber = explode("-", $numberFromDb);
+            if ($explodedNumber[1] != date('Y')) { //jeżeli zaczynamy nowy rok, resetujemy licznik wpisów
+                $number = '1-' . date('Y');
+                return $number;
+                exit();
+            }
+            $counter = (int) $explodedNumber[0];
+            $counter++;
+            $number = $counter . '-' . date('Y');
+            return $number;
         } catch (throwable $e) {
-            throw new AppException('Błąd podczas pobierania listy wpisów');
+            throw new AppException('Błąd podczas generowania numeru zlecenia');
         }
     }
 
@@ -140,7 +152,6 @@ class TaskModel extends AppModel implements ModelInterface
         } catch (throwable $e) {
             throw new AppException('Błąd przy zmianie parametru zlecenia.');
         }
-
     }
 
     public function addParam(string $id, string $event, string $comment): void
@@ -184,15 +195,41 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function deleteFile(string $fileName, int $id): void
+    public function addFile(int $id, fileController $file): void
     {
         try {
-            $fileName = $this->connection->quote($fileName);
-            $query = "UPDATE current_entries SET files = JSON_REMOVE(files, $fileName) WHERE id = $id";
+            $files = $this->connection->quote(json_encode(
+                array(
+                    date('Y-m-d H:i:s') => [
+                        'filename' => $file->getFile()['name'],
+                        'location' => $file->getLocation(),
+                    ]
+                )
+            ));
+            //sprawdzamy czy jakiś plik już istnieje w bazie, jeśli nie to go dodajemy 'od zera', jeśli tak to dopisujemy do istniejących plików
+            $checkQuery = "SELECT files FROM current_entries WHERE id = $id";
+            $checkIfExists = $this->connection->query($checkQuery)->fetchColumn();
+            if (!($checkIfExists)) {
+                $query = "UPDATE current_entries SET files = $files WHERE id = $id";
+                $this->connection->exec($query);
+            } else {
+                $query = "UPDATE current_entries SET files = JSON_MERGE_PATCH(files, $files) WHERE id = $id";
+                $this->connection->exec($query);
+            }
+        } catch (throwable $e) {
+            exit($e);
+            throw new AppException('Błąd Dodawaniu pliku do bazy danych');
+        }
+    }
+
+    public function deleteFile(string $fileId, int $id): void
+    {
+        try {
+            $query = "UPDATE current_entries SET files = JSON_REMOVE(files, '$.$fileId') WHERE id = $id";
             $this->connection->exec($query);
         } catch (throwable $e) {
             throw new AppException('Błąd przy usuwaniu pliku z bazy danych');
         }
-
     }
 }
+//© K.Rogaczewski
