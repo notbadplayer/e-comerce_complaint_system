@@ -189,6 +189,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function addFile(int $id, fileController $file): void
     {
         try {
+            $numOfFiles = $this->checkNumOfFiles($id); //pobranie ilości plików dopisanych do zlecenia
             $file->storeFile($id); //fizyczne zapisanie pliku w katalogu
             $files = $this->connection->quote(json_encode(
                 array(
@@ -199,9 +200,7 @@ class TaskModel extends AppModel implements ModelInterface
                 )
             ));
             //sprawdzamy czy jakiś plik już istnieje w bazie, jeśli nie to go dodajemy 'od zera', jeśli tak to dopisujemy do istniejących plików
-            $checkQuery = "SELECT files FROM current_entries WHERE id = $id";
-            $checkIfExists = $this->connection->query($checkQuery)->fetchColumn();
-            if (!($checkIfExists)) {
+            if (!$numOfFiles) {
                 $query = "UPDATE current_entries SET files = $files WHERE id = $id";
                 $this->connection->exec($query);
             } else {
@@ -221,6 +220,20 @@ class TaskModel extends AppModel implements ModelInterface
         } catch (throwable $e) {
             throw new AppException('Błąd przy usuwaniu pliku z bazy danych');
         }
+    }
+
+    public function checkNumOfFiles(int $id): int
+    {
+        $checkQuery = "SELECT JSON_LENGTH(files) FROM current_entries WHERE id = $id";
+        return (int) $this->connection->query($checkQuery)->fetchColumn();
+    }
+
+    public function checkIfFileExists(string $filename, int $id): bool
+    {
+        $filename = $this->connection->quote($filename);
+        $checkQuery = "SELECT JSON_SEARCH(files, 'one', $filename) FROM current_entries WHERE id = $id";
+        $result =  $this->connection->query($checkQuery)->fetchColumn();
+        return ($result) ? true : false;
     }
 }
 //© K.Rogaczewski

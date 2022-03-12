@@ -55,7 +55,7 @@ class TaskController extends AppController
                 ]);
                 exit();
             }
-            if(!($taskData['file']->getFileSize())) {
+            if (!($taskData['file']->getFileSize())) {
                 $taskData['file'] = null;
             }
             $this->taskModel->add($taskData); //dodajemy wpis
@@ -201,7 +201,9 @@ class TaskController extends AppController
     {
         if ($this->request->hasPost()) {
             $taskData['file'] = new fileController($_FILES['file']); //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
-            $taskData['id'] = $this->request->postParam('id') ?? null;
+            $taskData['id'] = $this->request->postParam('id');
+            $taskData['numOfFiles'] = $this->taskModel->checkNumOfFiles((int) $taskData['id']); //pobranie liczby plików dopisanych do zlecenia, z bazy danych
+            $taskData['fileExists'] = $this->taskModel->checkIfFileExists($taskData['file']->getFileName(), (int) $taskData['id']); //sprawdzenie czy plik o takiej nazwie już istnieje
             $validatedFile = $this->validator->validate($taskData);
             if (!$validatedFile['pass']) {
                 $taskId = (int) $this->request->postParam('id');
@@ -211,7 +213,7 @@ class TaskController extends AppController
                     'status' => 'fileAddError',
                     'messages' => $validatedFile['messages']
                 ]);
-
+                exit();
             }
             //Jeżeli przeszliśmy walidację plików:
             $taskId = (int) $this->request->postParam('id');

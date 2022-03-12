@@ -15,10 +15,12 @@ class Validate
 
         (isset($data['customer']) ? $this->customerRules($data['customer']) : false);
         (isset($data['object']) ? $this->objectRules($data['object']) : false);
-        (isset($data['description']) ? $this->descriptionRules($data['description']): false);
+        (isset($data['description']) ? $this->descriptionRules($data['description']) : false);
         (isset($data['email']) ? $this->emailRules($data['email']) : false);
         (isset($data['receipt']) ? $this->receiptRules($data['receipt']) : false);
         (isset($data['file']) ? $this->fileRules($data['file']) : false);
+        (isset($data['numOfFiles']) ? $this->numOffileRules($data['numOfFiles']) : false);
+        (isset($data['fileExists']) ? $this->fileExistRule($data['fileExists']) : false);
 
         if (isset($data['term'])) { //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
             $this->termRules($data['term'], $data['created']);
@@ -107,6 +109,24 @@ class Validate
                 $this->messages['file'][] = "Maksymalny rozmiar pliku to: " . ($maxFileSize / 1024) . " MB";
                 $this->pass = false;
             }
+            if (strlen($param->getFileName()) > 40) {
+                $this->messages['file'][] = "Zbyt długa nazwa pliku.";
+                $this->pass = false;
+            }
+        }
+    }
+    private function numOffileRules(int $param): void
+    {
+        if ($param >= 3) { //Jeżeli liczba plików jest większa niż 3
+            $this->messages['file'][] = "Maksymalna liczba plików to 3";
+            $this->pass = false;
+        }
+    }
+    private function fileExistRule(bool $param): void
+    {
+        if ($param) { //plik o takiej nazwie już istnieje
+            $this->messages['file'][] = "Plik o takiej nazwie już istnieje.";
+            $this->pass = false;
         }
     }
 }
