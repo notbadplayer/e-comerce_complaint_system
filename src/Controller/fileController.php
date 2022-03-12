@@ -16,22 +16,26 @@ class fileController
         $this->file = $file;
     }
 
-    public function getFile()
+    public function getFile(): array
     {
         return $this->file;
     }
 
-    public function getLocation()
+    public function getLocation(): string
     {
         return $this->target_file;
     }
 
-    public function getFileType()
+    public function getFileType(): string
     {
         return strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
     }
+    public function getFileName(): string
+    {
+        return strtolower($this->file['name']);
+    }
 
-    public function getFileSize()
+    public function getFileSize(): int
     {
         return (int) (ceil(($this->file['size']) / 1024));
     }
