@@ -55,15 +55,10 @@ class TaskController extends AppController
                 ]);
                 exit();
             }
-            //jeżeli wczytano plik to też go dodajemy
-            if ($taskData['file']->getFileSize()) {
-                $taskData['file']->storeFile();
-            } else {
+            if(!($taskData['file']->getFileSize())) {
                 $taskData['file'] = null;
             }
-
-            $this->taskModel->add($taskData); //dodajemy wpis do bazy danych
-            //po dodaniu danych, przekierowanie na stronę gówną
+            $this->taskModel->add($taskData); //dodajemy wpis
             header('location:/?status=added');
             exit();
         }
@@ -206,6 +201,7 @@ class TaskController extends AppController
     {
         if ($this->request->hasPost()) {
             $taskData['file'] = new fileController($_FILES['file']); //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
+            $taskData['id'] = $this->request->postParam('id') ?? null;
             $validatedFile = $this->validator->validate($taskData);
             if (!$validatedFile['pass']) {
                 $taskId = (int) $this->request->postParam('id');
@@ -221,9 +217,8 @@ class TaskController extends AppController
             $taskId = (int) $this->request->postParam('id');
             //jeżeli wczytano plik to też go dodajemy
             if ($taskData['file']->getFileSize()) {
-                $taskData['file']->storeFile();
+                $taskData['file']->storeFile($taskId);
                 $this->taskModel->addFile($taskId, $taskData['file']); //dodanie informacji o pliku do bazy danych
-
             } else {
                 throw new AppException('Błąd podczas dodawania pliku');
             }

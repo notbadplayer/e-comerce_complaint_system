@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Model\FileModel;
 use App\Model\TaskModel;
 use App\Request;
 use App\Validate;

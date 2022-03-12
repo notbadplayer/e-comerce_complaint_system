@@ -24,31 +24,35 @@ switch ($params['status']) {
     </div>
 
     <div class="card-body">
-        <div class="table-responsive text-nowrap">
-            <table class="table table-striped table-hover table-sm">
-                <thead>
-                    <th>Numer</th>
-                    <th>Klient</th>
-                    <th class="d-none d-lg-table-cell">Typ</th>
-                    <th class="d-none d-lg-table-cell">Priorytet</th>
-                    <th class="d-none d-md-table-cell">Status</th>
-                    <th></th>
-                </thead>
-                <?php foreach ($tasks as $task) : ?>
-                    <tr>
-                        <td><?php echo str_replace("-", "/", $task['number']) ?></td>
-                        <td class="text-wrap"><?php echo $task['customer'] ?></td>
-                        <td class="d-none d-lg-table-cell"><?php echo $task['type'] ?></td>
-                        <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
-                        <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
-                        <td>
-                            <a href="/?action=show&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
-                            <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
+        <?php if (count($tasks)) : ?>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <th>Numer</th>
+                        <th>Klient</th>
+                        <th class="d-none d-lg-table-cell">Typ</th>
+                        <th class="d-none d-lg-table-cell">Priorytet</th>
+                        <th class="d-none d-md-table-cell">Status</th>
+                        <th></th>
+                    </thead>
+                    <?php foreach ($tasks as $task) : ?>
+                        <tr>
+                            <td><?php echo $task['number'] ?></td>
+                            <td class="text-wrap"><?php echo $task['customer'] ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo $task['type'] ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
+                            <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
+                            <td>
+                                <a href="/?action=show&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
+                                <a href="/?action=edit&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="fas fa-pencil-alt"></i><span class="d-none d-lg-inline ms-1">Edycja<span></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        <?php else : ?>
+            <span class="text-muted">Brak wpisów w bazie danych, kliknij  <a href="/?action=add" class="text-muted">tutaj</a>, aby dodać nowy</span>
+        <?php endif; ?>
     </div>
 
     <div class="card-footer">

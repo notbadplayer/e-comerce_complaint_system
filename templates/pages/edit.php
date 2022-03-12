@@ -50,7 +50,7 @@ switch ($params['status'] ?? '') {
             <div class="row mb-2">
                 <label for="entryNumber" class="col-lg-2 col-form-label-sm">Numer zlecenia:</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo str_replace("-", "/", $taskData['number']) ?>" disabled>
+                    <input type="text" class="form-control form-control-sm" id="entryNumber" placeholder="numer zgłoszenia" value="<?php echo $taskData['number'] ?>" disabled>
                 </div>
 
                 <label for="created" class="col-lg-2 col-form-label-sm">Data zlecenia:</label>

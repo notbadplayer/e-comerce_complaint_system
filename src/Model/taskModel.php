@@ -56,22 +56,13 @@ class TaskModel extends AppModel implements ModelInterface
                     ]
                 )
             ));
-
-            $files = $this->connection->quote('');
-            if ($taskData['file']) {
-                $files = $this->connection->quote(json_encode(
-                    array(
-                        date('Y-m-d H:i:s') => [
-                            'filename' => $taskData['file']->getFile()['name'],
-                            'location' => $taskData['file']->getLocation(),
-                        ]
-                    )
-                ));
-            }
-            $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history, files) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history, $files)";
+            $query = "INSERT INTO current_entries (number, created, customer, receipt, email, object, type, priority, status, term, description, history) VALUES ($number, $created, $customer, $receipt, $email, $object, $type, $priority, $status, $term, $description, $history)";
             $this->connection->exec($query);
+
+            if ($taskData['file']) { //jeżeli dodajemy plik przy nowym zleceniu to:
+                $this->addFile((int) $this->connection->lastInsertId(), $taskData['file']);
+            }
         } catch (Throwable $e) {
-            exit($e);
             throw new AppException('Błąd podczas dodawania nowego zlecenia');
         }
     }
@@ -112,19 +103,19 @@ class TaskModel extends AppModel implements ModelInterface
             $numberFromDb = $this->connection->query($query);
             $numberFromDb = $numberFromDb->fetch(PDO::FETCH_COLUMN);
             if (!($numberFromDb)) { //jeśli baza jest pusta
-                $number = '1-' . date('Y');
+                $number = '1/' . date('Y');
                 return $number;
                 exit();
             }
-            $explodedNumber = explode("-", $numberFromDb);
+            $explodedNumber = explode("/", $numberFromDb);
             if ($explodedNumber[1] != date('Y')) { //jeżeli zaczynamy nowy rok, resetujemy licznik wpisów
-                $number = '1-' . date('Y');
+                $number = '1/' . date('Y');
                 return $number;
                 exit();
             }
             $counter = (int) $explodedNumber[0];
             $counter++;
-            $number = $counter . '-' . date('Y');
+            $number = $counter . '/' . date('Y');
             return $number;
         } catch (throwable $e) {
             throw new AppException('Błąd podczas generowania numeru zlecenia');
@@ -198,6 +189,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function addFile(int $id, fileController $file): void
     {
         try {
+            $file->storeFile($id); //fizyczne zapisanie pliku w katalogu
             $files = $this->connection->quote(json_encode(
                 array(
                     date('Y-m-d H:i:s') => [
@@ -217,7 +209,6 @@ class TaskModel extends AppModel implements ModelInterface
                 $this->connection->exec($query);
             }
         } catch (throwable $e) {
-            exit($e);
             throw new AppException('Błąd Dodawaniu pliku do bazy danych');
         }
     }
