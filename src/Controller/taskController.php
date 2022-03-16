@@ -59,6 +59,9 @@ class TaskController extends AppController
                 $taskData['file'] = null;
             }
             $this->taskModel->add($taskData); //dodajemy wpis
+
+            $this->mailController->registerTask();
+
             header('location:/?status=added');
             exit();
         }
@@ -192,7 +195,10 @@ class TaskController extends AppController
                 throw new AppException('Błąd podczas usuwania pliku');
             }
 
-            header('location:/?status=archived');
+            $this->view->render('edit', [
+                'taskData' => $this->taskModel->get($taskId),
+                'status' => 'deletedFile'
+            ]);
             exit();
         }
     }
@@ -224,7 +230,10 @@ class TaskController extends AppController
             } else {
                 throw new AppException('Błąd podczas dodawania pliku');
             }
-            header('location:/?status=archived');
+            $this->view->render('edit', [
+                'taskData' => $this->taskModel->get($taskId),
+                'status' => 'addFile'
+            ]);
             exit();
         }
     }

@@ -31,6 +31,18 @@ switch ($params['status'] ?? '') {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
         break;
+    case 'deletedFile':
+        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                Załącznik został usunięty.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+        break;
+    case 'addFile':
+        echo '<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    Dodano załącznik.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>';
+        break;
 }
 ?>
 
@@ -156,14 +168,14 @@ switch ($params['status'] ?? '') {
             <div class="row mt-5 mb-2 border rounded <?php echo (isset($messages['file']) ? 'border border-danger' : '') ?>">
                 <div class="d-inline fs-6 ">Lista dołączonych plików: <a class="btn btn-sm fs-5 link-primary" data-bs-toggle="modal" data-bs-target="#taskAddFile"><i class="fas fa-plus-circle"></i></a></div>
                 <?php foreach ($messages['file'] ?? [] as $message) : ?>
-                        <span class="text-danger"><?php echo $message ?></span>
+                    <span class="text-danger"><?php echo $message ?></span>
                 <?php endforeach; ?>
                 <?php if (count($files)) : ?>
                     <ul class="list-unstyled">
                         <?php foreach ($files as $file => $fileValue) : ?>
                             <li>
-                                <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><?php echo $fileValue['filename'] ?></a>
-                                <a class="text-decoration-none link-danger" data-bs-toggle="modal" data-bs-target="#taskFileDelete" data-bs-filename="<?php echo $fileValue['filename']?>" data-bs-location="<?php echo $fileValue['location']?>" data-bs-fileId="<?php echo $file?>">
+                                <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><i class="far fa-file me-2"></i><?php echo $fileValue['filename'] ?></a>
+                                <a class="text-decoration-none link-danger" data-bs-toggle="modal" data-bs-target="#taskFileDelete" data-bs-filename="<?php echo $fileValue['filename'] ?>" data-bs-location="<?php echo $fileValue['location'] ?>" data-bs-fileId="<?php echo $file ?>">
                                     <i class="far fa-trash-alt ms-2"></i></a>
                             </li>
                         <?php endforeach; ?>
@@ -173,12 +185,11 @@ switch ($params['status'] ?? '') {
                 <?php endif; ?>
             </div>
 
-
-
-
-            <button type="submit" class="btn btn-primary me-3 mt-4 d-inline-block"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
-            <a class="text-decoration-none btn btn-primary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskOtherPopup"><i class="fas fa-feather-alt me-2"></i>Dodaj inne zdarzenie</a>
-            <a class="text-decoration-none btn btn-secondary me-3 mt-4 d-inline-block" data-bs-toggle="modal" data-bs-target="#taskArchivePopup"><i class="fas fa-archive me-2"></i>Przenieś do archiwum</a>
+            <div class="row justify-content-between">
+                <button type="submit" class="btn btn-primary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
+                <a class="text-decoration-none btn btn-primary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3" data-bs-toggle="modal" data-bs-target="#taskOtherPopup"><i class="fas fa-feather-alt me-2"></i>Dodaj inne zdarzenie</a>
+                <a class="text-decoration-none btn btn-secondary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3" data-bs-toggle="modal" data-bs-target="#taskArchivePopup"><i class="fas fa-archive me-2"></i>Przenieś do archiwum</a>
+            </div>
         </form>
 
 

@@ -8,6 +8,7 @@ use App\Model\TaskModel;
 use App\Request;
 use App\Validate;
 use App\View\View;
+use App\Controller\mailController;
 
 session_start();
 
@@ -22,6 +23,7 @@ abstract class AppController
     protected TaskModel $taskModel;
     protected Validate $validator;
     protected fileController $fileController;
+    protected mailController $mailController;
 
     public function __construct(Request $request)
     {
@@ -30,6 +32,7 @@ abstract class AppController
         self::$configuration = require_once('src/configuration.php');
         $this->taskModel = new TaskModel(self::$configuration['db']);
         $this->validator = new Validate();
+        $this->mailController = new mailController(self::$configuration['mail']);
     }
 
     public function run(): void

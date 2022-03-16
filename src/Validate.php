@@ -100,7 +100,7 @@ class Validate
     private function fileRules(fileController $param): void
     {
         if ($param->getFileSize()) { //jeżeli plik jest dodany to waludujemy, jeśli nie, to pomijam walidację
-            $acceptedFileTypes = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx',];
+            $acceptedFileTypes = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt'];
             $maxFileSize = 1024; //max rozmiar pliku w KB 
             if (!(in_array($param->getFileType(), $acceptedFileTypes))) {
                 $this->messages['file'][] = "Niedozwolony typ pliku. Dozwolone rozrzerzenia to: " . implode(", ", $acceptedFileTypes);

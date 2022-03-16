@@ -1,6 +1,7 @@
 <?php
 $taskData = $params['taskData'] ?? [];
-
+$filestoDecode = str_replace('&quot;', '"', $taskData['files']);
+$files = json_Decode($filestoDecode, true) ?? [];
 $historytoDecode = str_replace('&quot;', '"', $taskData['history']);
 $history = json_decode($historytoDecode, true);
 
@@ -89,6 +90,22 @@ $history = json_decode($historytoDecode, true);
                     <input type="text" class="form-control form-control-sm" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>" disabled>
                 </div>
             </div>
+
+            <div class="row mt-5 mb-2 border rounded">
+                <div class="d-inline fs-6 mb-2">Lista dołączonych plików:</div>
+                <?php if (count($files)) : ?>
+                    <ul class="list-unstyled">
+                        <?php foreach ($files as $file => $fileValue) : ?>
+                            <li>
+                            <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><i class="far fa-file me-2"></i><?php echo $fileValue['filename'] ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else : ?>
+                    <span class="text-muted">Brak dodanych załączników</span>
+                <?php endif; ?>
+            </div>
+
         </form>
 
         <div class="card mt-5">
