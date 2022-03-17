@@ -10,7 +10,7 @@ use App\Exceptions\AppException;
 
 require_once "vendor/autoload.php";
 
-class mailController
+class MailController
 {
     private $mail;
 
@@ -28,13 +28,27 @@ class mailController
         $this->mail->AddEmbeddedImage('templates/img/logo13.png', 'logo');
     }
 
-    public function registerTask()
+    public function registerTask(array $taskData)
     {
         try {
             $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Zarejestrowano nowe zgłoszenie reklamacyjne';
             $this->mail->Body = require_once('templates/mails/register.php');
+            $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $this->mail->send();
+        } catch (Exception $e) {
+            throw new AppException('Błąd wysyłania maila.' . $this->mail->ErrorInfo);
+        }
+    }
+
+    public function changeStatus(array $taskData)
+    {
+        try {
+            $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
+            $this->mail->isHTML(true);
+            $this->mail->Subject = 'Zmiana statusu zgłoszenia';
+            $this->mail->Body = require_once('templates/mails/changeStatus.php');
             $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $this->mail->send();
         } catch (Exception $e) {
