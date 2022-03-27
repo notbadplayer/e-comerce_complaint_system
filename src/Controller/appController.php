@@ -8,6 +8,8 @@ use App\Model\TaskModel;
 use App\Request;
 use App\Validate;
 use App\View\View;
+use App\Controller\mailController;
+use App\Model\UserSettingsModel;
 
 session_start();
 
@@ -22,6 +24,10 @@ abstract class AppController
     protected TaskModel $taskModel;
     protected Validate $validator;
     protected fileController $fileController;
+    protected MailController $mailController;
+    protected userSettingsController $userSetting;
+    protected UserSettingsModel $userSettingsModel;
+    protected array $userConfiguration;
 
     public function __construct(Request $request)
     {
@@ -30,17 +36,77 @@ abstract class AppController
         self::$configuration = require_once('src/configuration.php');
         $this->taskModel = new TaskModel(self::$configuration['db']);
         $this->validator = new Validate();
+        $this->mailController = new MailController(self::$configuration['mail']);
+        $this->userSetting = new userSettingsController(self::$configuration['db']);
     }
 
     public function run(): void
     {
         $action = $this->getAction();
+        if (!method_exists($this, $action)) {
+            $action = self::DEFAULT_ACTION;
+        }
         $this->$action();
     }
 
     private function getAction(): string
     {
         return $this->request->getParam('action', self::DEFAULT_ACTION);
+    }
+
+    private function changeUserSettings(): void
+    {
+        $this->validateLogin();
+        if ($this->request->hasPost()) {
+            //logika przypisania typów 
+            $task_types = '';
+            for ($i = 0; $i < 5; $i++) { //docelowo będę pobierał liczbę dopuszcalnych typów z konfiguracji
+                if ($this->request->postParam("task_type_$i")) {
+                    $task_types = $task_types . ";" . preg_replace('/[^A-Za-z0-9\-\s]/', '', $this->request->postParam("task_type_$i"));
+                }
+            }
+            $task_types = trim($task_types, ';'); //usuwam ostatni separator
+            $status_types = '';
+            for ($i = 0; $i < 5; $i++) { //docelowo będę pobierał liczbę dopuszcalnych typów z konfiguracji
+                if ($this->request->postParam("status_type_$i")) {
+                    $status_types = $status_types . ";" . preg_replace('/[^A-Za-z0-9\-\s]/', '', $this->request->postParam("status_type_$i"));
+                }
+            }
+            $status_types = trim($status_types, ';'); //usuwam ostatni separator
+
+            $userConfiguration = [
+                'enableMails' => $this->request->postParam('enableMails'),
+                'mail_register' => $this->request->postParam('mail_register'),
+                'mail_type' => $this->request->postParam('mail_type'),
+                'mail_priority' => $this->request->postParam('mail_priority'),
+                'mail_status' => $this->request->postParam('mail_status'),
+                'mail_term' =>  $this->request->postParam('mail_term'),
+                'tasks_types' => $task_types,
+                'status_types' => $status_types,
+            ];
+   
+            $validatedConfiguration = $this->validator->validate($userConfiguration);
+
+            if (!$validatedConfiguration['pass']) {
+                $this->view->render('userConfiguration', [
+                    'userConfiguration' => $userConfiguration,
+                    'status' => 'configEditError',
+                    'messages' => $validatedConfiguration['messages']
+                ]);
+                exit();
+            }
+            $this->userSetting->saveConfiguration($userConfiguration);
+            $this->view->render('userConfiguration', [
+                'userConfiguration' => $this->userSetting->getConfiguration(),
+                'status' => 'configModified',
+            ]);
+            exit();
+        }
+        //pierwsze wejście do funkcji
+        $this->view->render('userConfiguration', [
+            'userConfiguration' => $this->userSetting->getConfiguration(),
+            'status' => $this->request->getParam('status'),
+        ]);
     }
 
     protected function validateLogin(): void
@@ -61,7 +127,7 @@ abstract class AppController
                 exit();
             } else {
                 $this->view->login('Nieprawidłowa nazwa użytkownika lub hasło.');
-            exit();
+                exit();
             }
         }
     }

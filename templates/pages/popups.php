@@ -75,7 +75,7 @@
                     <label for="updatedValue" class="col-form-label-sm">Status zlecenia:</label>
                     <select name="updatedValue" class="form-select-sm col-12 border" id="status" name="status">
                         <option value="Przyjęte" <?php echo (isset($taskData['status']) && $taskData['status'] === 'Przyjęte' ? 'selected' : '') ?>>Przyjęte</option>
-                        <option value="w trakcie realizacji" <?php echo (isset($taskData['status']) && $taskData['status'] === 'w trackie realizacji' ? 'selected' : '') ?>>w trakcie realizacji</option>
+                        <option value="w trakcie realizacji" <?php echo (isset($taskData['status']) && $taskData['status'] === 'w trakcie realizacji' ? 'selected' : '') ?>>w trakcie realizacji</option>
                         <option value="zrealizowane" <?php echo (isset($taskData['status']) && $taskData['status'] === 'zrealizowane' ? 'selected' : '') ?>>zrealizowane</option>
                         <option value="anulowane" <?php echo (isset($taskData['status']) && $taskData['status'] === 'anulowane' ? 'selected' : '') ?>>anulowane</option>
                     </select>
@@ -227,3 +227,50 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="taskUserSettings" tabindex="-1" aria-labelledby="taskStatusPopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-cog me-2"></i>Konfiguracja</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/?action=changeParam">
+                <div class="card">
+                    <div class="card-header">
+                        Mailing
+                    </div>
+                    <div class="card-body">
+                        <?php var_dump($this->userConfiguration); ?>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="enableMails" type="checkbox" role="switch" id="flexSwitchCheckDefault" <?php echo (isset($this->userConfiguration) && $this->userConfiguration['enableMails'] === '1' ? 'selected' : '') ?>>
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Włącz system powiadomień mailowych</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="maxTaskTypesReached" tabindex="-1" aria-labelledby="maxTaskTypesReached" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Osiągnięto maksymalną liczbę opcji</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>Osiągnięto maksymalną dopuszczalną liczbę opcji. Nie można dodać kolejnej.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>

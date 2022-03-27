@@ -35,9 +35,9 @@ class fileController
         return strtolower($this->file['name']);
     }
 
-    public function getFileSize(): int
+    public function getFileSize(): float
     {
-        return (int) (ceil(($this->file['size']) / 1024));
+        return (float) (($this->file['size']) / 1024);
     }
 
     public function storeFile($id): void

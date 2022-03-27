@@ -59,6 +59,13 @@ class TaskController extends AppController
                 $taskData['file'] = null;
             }
             $this->taskModel->add($taskData); //dodajemy wpis
+
+            // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
+            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
+                $taskData['entryNumber'] = $this->taskModel->generateNumber();
+                $this->mailController->registerTask($taskData);
+            }
+
             header('location:/?status=added');
             exit();
         }
@@ -144,6 +151,19 @@ class TaskController extends AppController
                 $this->request->postParam('updatedValue'),
                 $this->request->postParam('comment')
             );
+
+            // MAILING (jeżeli mail włączony i włączony dla poszczególnej akcji)
+            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_'.$taskAction)) { 
+                $taskData = $this->taskModel->get((int) $this->request->postParam('id'));
+                $taskData['details'] = array(
+                    'actionMessage' => $actionMessage,
+                    'previousValue' =>  $this->request->postParam('previousValue'),
+                    'updatedValue' =>  $this->request->postParam('updatedValue'),
+                    'comment' =>  $this->request->postParam('comment'),
+                );
+                $this->mailController->changeParam($taskData);
+            }
+
             header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");
             exit();
         }
@@ -192,7 +212,10 @@ class TaskController extends AppController
                 throw new AppException('Błąd podczas usuwania pliku');
             }
 
-            header('location:/?status=archived');
+            $this->view->render('edit', [
+                'taskData' => $this->taskModel->get($taskId),
+                'status' => 'deletedFile'
+            ]);
             exit();
         }
     }
@@ -224,7 +247,10 @@ class TaskController extends AppController
             } else {
                 throw new AppException('Błąd podczas dodawania pliku');
             }
-            header('location:/?status=archived');
+            $this->view->render('edit', [
+                'taskData' => $this->taskModel->get($taskId),
+                'status' => 'addFile'
+            ]);
             exit();
         }
     }

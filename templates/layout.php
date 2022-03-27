@@ -19,24 +19,26 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <?php if(!empty($_SESSION['login'])): ?>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
-                    <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
-                    <a class="nav-link" href="/?action=listArchive">Przeglądaj archiwum</a>
+            <?php if (!empty($_SESSION['login'])) : ?>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
+                        <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
+                        <a class="nav-link" href="/?action=listArchive">Przeglądaj archiwum</a>
+                    </div>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown-menu-end">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <?php echo $_SESSION['login'] ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="/?action=changeUserSettings"><i class="fas fa-cog me-2"></i>Ustawienia</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/?action=logout"><i class="fas fa-sign-out-alt me-2"></i>Wyloguj się</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropstart">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?php echo $_SESSION['login']?>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="/?action=logout">Wyloguj się</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
             <?php endif; ?>
         </div>
     </nav>
