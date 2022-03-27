@@ -60,7 +60,8 @@ class TaskController extends AppController
             }
             $this->taskModel->add($taskData); //dodajemy wpis
 
-            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('sendRegister')) { // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
+            // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
+            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
                 $taskData['entryNumber'] = $this->taskModel->generateNumber();
                 $this->mailController->registerTask($taskData);
             }
@@ -151,15 +152,16 @@ class TaskController extends AppController
                 $this->request->postParam('comment')
             );
 
-            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('sendStatusChange')) { // MAILING (jeżeli mail włączony i wysyłamy przy zmianie)
+            // MAILING (jeżeli mail włączony i włączony dla poszczególnej akcji)
+            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_'.$taskAction)) { 
                 $taskData = $this->taskModel->get((int) $this->request->postParam('id'));
-                $taskData['details']=array(
+                $taskData['details'] = array(
                     'actionMessage' => $actionMessage,
                     'previousValue' =>  $this->request->postParam('previousValue'),
                     'updatedValue' =>  $this->request->postParam('updatedValue'),
                     'comment' =>  $this->request->postParam('comment'),
                 );
-                $this->mailController->changeStatus($taskData);
+                $this->mailController->changeParam($taskData);
             }
 
             header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");

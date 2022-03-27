@@ -13,5 +13,3 @@ Data utworzenia zgłoszenia: <b>". $taskData['created']."</b><br/>
 Zgłoszenie zostało przyjęte. Nasz zespół dokona wszelkich starań, aby zrealizować je w jak najszybszym czasie.
 ";
 ?>
-
-

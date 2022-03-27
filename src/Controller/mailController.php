@@ -42,13 +42,13 @@ class MailController
         }
     }
 
-    public function changeStatus(array $taskData)
+    public function changeParam(array $taskData)
     {
         try {
             $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
             $this->mail->isHTML(true);
-            $this->mail->Subject = 'Zmiana statusu zgłoszenia';
-            $this->mail->Body = require_once('templates/mails/changeStatus.php');
+            $this->mail->Subject = $taskData['details']['actionMessage'];
+            $this->mail->Body = require_once('templates/mails/changeParam.php');
             $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
             $this->mail->send();
         } catch (Exception $e) {

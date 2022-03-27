@@ -15,7 +15,18 @@ class userSettingsController
         $this->userSettingsModel = new UserSettingsModel($configuration);
     }
 
-    public function getSetting(string $param){
+    public function getSetting(string $param)
+    {
         return $this->userSettingsModel->getSetting($param);
+    }
+
+    public function getConfiguration(): array
+    {
+        return $this->userSettingsModel->getConfiguration();
+    }
+
+    public function saveConfiguration(array $userConfiguration): void
+    {
+        $this->userSettingsModel->saveConfiguration($userConfiguration);
     }
 }
