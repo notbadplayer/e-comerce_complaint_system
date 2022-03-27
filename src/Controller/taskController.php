@@ -37,7 +37,7 @@ class TaskController extends AppController
                 'object' => $this->request->postParam('object'),
                 'type' => $this->request->postParam('type'),
                 'priority' => $this->request->postParam('priority'),
-                'status' => 'Przyjęte',
+                'status' => $this->request->postParam('status'),
                 'term' => $this->request->postParam('term'),
                 'description' => $this->request->postParam('description'),
                 'file' => new fileController($_FILES['file']), //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
@@ -50,6 +50,8 @@ class TaskController extends AppController
                     'entryNumber' => $this->taskModel->generateNumber(),
                     'date' => $taskData['term'],
                     'created' => date('Y-m-d'),
+                    'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
+                    'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
                     'taskData' =>  $taskData,
                     'messages' => $validatedTask['messages']
                 ]);
@@ -74,6 +76,8 @@ class TaskController extends AppController
             'entryNumber' => $this->taskModel->generateNumber(),
             'created' => date('Y-m-d'),
             'date' => date('Y-m-d', (strtotime("+1 week"))),
+            'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
+            'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
         ]);
     }
 
@@ -97,6 +101,8 @@ class TaskController extends AppController
                     'entryNumber' => $this->taskModel->generateNumber(),
                     'date' => $taskData['term'],
                     'taskData' =>  $taskData,
+                    'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
+                    'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
                     'messages' => $validatedTask['messages']
                 ]);
                 exit();
@@ -109,6 +115,8 @@ class TaskController extends AppController
         $taskData = $this->taskModel->get($taskId);
         $this->view->render('edit', [
             'taskData' => $taskData,
+            'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
+            'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
             'status' => $this->request->getParam('status'),
         ]);
     }
@@ -153,7 +161,7 @@ class TaskController extends AppController
             );
 
             // MAILING (jeżeli mail włączony i włączony dla poszczególnej akcji)
-            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_'.$taskAction)) { 
+            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_' . $taskAction)) {
                 $taskData = $this->taskModel->get((int) $this->request->postParam('id'));
                 $taskData['details'] = array(
                     'actionMessage' => $actionMessage,

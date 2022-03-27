@@ -15,7 +15,7 @@ class UserSettingsModel extends AppModel
         try {
             $query = "SELECT $param FROM user_settings";
             $result =  $this->connection->query($query)->fetchColumn();
-            return (bool) $result;
+            return $result;
         } catch (Throwable $e) {
             throw new AppException('Błąd podczas pobierania ustawień użytkownika');
         }

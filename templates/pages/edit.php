@@ -1,6 +1,8 @@
 <?php
 $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
+$tasksTypes = $params['types'] ?? [];
+$statusTypes = $params['statuses'] ?? [];
 $filestoDecode = str_replace('&quot;', '"', $taskData['files']);
 $files = json_Decode($filestoDecode, true) ?? [];
 $historytoDecode = (str_replace('&quot;', '"', $taskData['history']));

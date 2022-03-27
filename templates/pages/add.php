@@ -1,6 +1,8 @@
 <?php
 $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
+$tasksTypes = $params['types'] ?? [];
+$statusTypes = $params['statuses'] ?? [];
 ?>
 <div class="card" style="min-height: 80vh;">
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
@@ -66,9 +68,9 @@ $taskData = $params['taskData'] ?? [];
                 <label for="type" class="col-lg-2 col-form-label-sm">Typ zlecenia:</label>
                 <div class="col-lg-4">
                     <select name="type" class="form-select-sm col-12 border" id="type">
-                        <option value="Nie wybrano" <?php echo (!isset($taskData['type']) ? 'selected' : '') ?>>Nie wybrano</option>
-                        <option value="Zwrot" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Zwrot' ? 'selected' : '') ?>>Zwrot</option>
-                        <option value="Gwarancyjne" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Gwarancyjne' ? 'selected' : '') ?>>Gwarancyjne</option>
+                        <?php foreach ($tasksTypes as $taskType) : ?>
+                            <option value="<?php echo $taskType ?>" <?php echo (isset($taskData['type']) && $taskData['type'] === "$taskType" ? 'selected' : '') ?>><?php echo $taskType ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>
@@ -87,8 +89,8 @@ $taskData = $params['taskData'] ?? [];
             <div class="row mb-2">
                 <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
                 <div class="col-lg-4">
-                    <select name="category" class="form-select-sm col-12 border" id="status" name="status" disabled>
-                        <option value="Przyjęte" selected>Przyjęte</option>
+                    <select name="status" class="form-select-sm col-12 border" id="status">
+                        <option value="<?php echo $statusTypes[0]?>" selected><?php echo $statusTypes[0]?></option>
                     </select>
                 </div>
             </div>

@@ -12,9 +12,9 @@
                 <div class="modal-body">
                     <label for="updatedValue" class="col-form-label-sm">Typ zlecenia:</label>
                     <select name="updatedValue" class="form-select-sm col-12 border mb-3" id="updatedValue">
-                        <option value="Nie wybrano" <?php echo (!isset($taskData['type']) ? 'selected' : '') ?>>Nie wybrano</option>
-                        <option value="Zwrot" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Zwrot' ? 'selected' : '') ?>>Zwrot</option>
-                        <option value="Gwarancyjne" <?php echo (isset($taskData['type']) && $taskData['type'] === 'Gwarancyjne' ? 'selected' : '') ?>>Gwarancyjne</option>
+                        <?php foreach ($tasksTypes as $taskType) : ?>
+                            <option value="<?php echo $taskType ?>" <?php echo (isset($taskData['type']) && $taskData['type'] === "$taskType" ? "selected" : "") ?>><?php echo $taskType ?></option>
+                        <?php endforeach; ?>
                     </select>
 
                     <label for="comment" class="col-form-label-sm">Dodatkowe informacje:</label>
@@ -74,12 +74,10 @@
                 <div class="modal-body">
                     <label for="updatedValue" class="col-form-label-sm">Status zlecenia:</label>
                     <select name="updatedValue" class="form-select-sm col-12 border" id="status" name="status">
-                        <option value="Przyjęte" <?php echo (isset($taskData['status']) && $taskData['status'] === 'Przyjęte' ? 'selected' : '') ?>>Przyjęte</option>
-                        <option value="w trakcie realizacji" <?php echo (isset($taskData['status']) && $taskData['status'] === 'w trakcie realizacji' ? 'selected' : '') ?>>w trakcie realizacji</option>
-                        <option value="zrealizowane" <?php echo (isset($taskData['status']) && $taskData['status'] === 'zrealizowane' ? 'selected' : '') ?>>zrealizowane</option>
-                        <option value="anulowane" <?php echo (isset($taskData['status']) && $taskData['status'] === 'anulowane' ? 'selected' : '') ?>>anulowane</option>
+                        <?php foreach ($statusTypes as $statusType) : ?>
+                            <option value="<?php echo $statusType ?>" <?php echo (isset($taskData['status']) && $taskData['status'] === "$statusType" ? "selected" : "") ?>><?php echo $statusType ?></option>
+                        <?php endforeach; ?>
                     </select>
-
                     <label for="comment" class="col-form-label-sm">Dodatkowe informacje:</label>
                     <input type="text" class="form-control form-control-sm mb-5" id="comment" name="comment" placeholder="Tutaj można wpisać dodatkowy komentarz" maxlength="100">
                 </div>
