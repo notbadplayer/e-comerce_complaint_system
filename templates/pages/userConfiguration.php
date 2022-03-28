@@ -127,7 +127,12 @@ switch ($params['status'] ?? '') {
                         <div class="card p-3" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-ellipsis-h me-2"></i>Inne ustawienia</h5>
-                                <div class="mb-2">Zdefiniuj statusy zleceń:</div>
+                                <div class="row row-cols-1 row-cols-xl-2 g-0 mb-2">
+                                    <label for="taskPeriod" class="col col-form-label-sm">Domyślny czas realizacji: <span id="rangeValueView"></span> dni</label>
+                                    <div class="col">
+                                        <input type="range" name="taskPeriod" class="form-range" min="1" max="14" step="1" id="taskPeriod" value="<?php echo $userConfiguration['task_period']?>">
+                                    </div>
+                                </div>
 
                             </div>
                         </div>
@@ -138,8 +143,8 @@ switch ($params['status'] ?? '') {
             </div>
     </div>
     <div class="card-footer text-end">
-        <button type="button" class="btn btn-secondary">Anuluj</button>
-        <button type="submit" class="btn btn-primary">Zatwierdź</button>
+    <a href="/" class="btn btn-secondary"><i class="fas fa-chevron-left me-1"></i><span class="ms-1">Anuluj<span></a>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
         </form>
     </div>
 </div>
@@ -155,6 +160,7 @@ switch ($params['status'] ?? '') {
         } else {
             mailSwitches.style.display = 'none';
         }
+        rangeValueView.textContent = rangeBar.value;
     };
     //przy zmianie checkboxa
     mailSwitch.addEventListener('change', (event) => {
@@ -168,6 +174,8 @@ switch ($params['status'] ?? '') {
     //logika dodawania inputów
     const addTaskTypeButton = document.getElementById('addTaskType');
     const addStatusTypeButton = document.getElementById('addStatusType');
+    const rangeBar = document.getElementById('taskPeriod');
+    let rangeValueView = document.getElementById('rangeValueView');
     addTaskTypeButton.addEventListener("click", function(event) {
         event.preventDefault()
         const taskTypesFields = document.getElementsByClassName('task_type_input')
@@ -203,5 +211,10 @@ switch ($params['status'] ?? '') {
             field.setAttribute("name", "status_type_".concat(nextFieldNumber));
             statusTypesField.appendChild(field);
         };
+    });
+
+    //logika paska czasu zgłoszenia
+    rangeBar.addEventListener("change", function(event) {
+        rangeValueView.textContent = rangeBar.value;
     });
 </script>

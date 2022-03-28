@@ -83,6 +83,7 @@ abstract class AppController
                 'mail_term' =>  $this->request->postParam('mail_term'),
                 'tasks_types' => $task_types,
                 'status_types' => $status_types,
+                'task_period' => $this->request->postParam('taskPeriod'),
             ];
    
             $validatedConfiguration = $this->validator->validate($userConfiguration);

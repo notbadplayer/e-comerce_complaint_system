@@ -211,16 +211,12 @@ switch ($params['status'] ?? '') {
                         <tr>
                             <td><?php echo $key ?></td>
                             <td><?php echo $value['action'] ?? '' ?></td>
-                            <td class="d-none d-lg-table-cell"><?php echo $value['detail'] ?? '' ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo str_replace('-&gt;', ' <i class="fas fa-arrow-right"></i> ', ($value['detail'] ?? '')) ?></td>
                             <td class="d-none d-lg-table-cell"><?php echo $value['comment'] ?? '' ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
-
-
             </div>
         </div>
-
-
     </div>
 </div>

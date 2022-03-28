@@ -60,9 +60,10 @@ class UserSettingsModel extends AppModel
             //część odpowiedzialna za zapis typów i statusów zleceń:
             $taskTypesString = $this->connection->quote($userConfiguration['tasks_types']);
             $statusTypesString = $this->connection->quote($userConfiguration['status_types']);
+            $taskPeriod = $this->connection->quote($userConfiguration['task_period']);
 
             $query = "UPDATE user_settings SET 
-            enableMails = $enableMails $queryPart, tasks_types =  $taskTypesString, status_types = $statusTypesString";
+            enableMails = $enableMails $queryPart, tasks_types =  $taskTypesString, status_types = $statusTypesString, task_period = $taskPeriod";
             $this->connection->exec($query);
         } catch (Throwable $e) {
             throw new AppException('Błąd podczas zapisywania konfiguracji użytkownika');

@@ -75,7 +75,7 @@ class TaskController extends AppController
         $this->view->render('add', [
             'entryNumber' => $this->taskModel->generateNumber(),
             'created' => date('Y-m-d'),
-            'date' => date('Y-m-d', (strtotime("+1 week"))),
+            'date' => date('Y-m-d', (strtotime("+".$this->userSetting->getSetting('task_period')."days"))),
             'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
             'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
         ]);

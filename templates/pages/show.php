@@ -97,7 +97,7 @@ $history = json_decode($historytoDecode, true);
                     <ul class="list-unstyled">
                         <?php foreach ($files as $file => $fileValue) : ?>
                             <li>
-                            <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><i class="far fa-file me-2"></i><?php echo $fileValue['filename'] ?></a>
+                                <a class="text-decoration-none" href="<?php echo $fileValue['location'] ?>"><i class="far fa-file me-2"></i><?php echo $fileValue['filename'] ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -124,16 +124,12 @@ $history = json_decode($historytoDecode, true);
                         <tr>
                             <td><?php echo $key ?></td>
                             <td><?php echo $value['action'] ?? '' ?></td>
-                            <td class="d-none d-lg-table-cell"><?php echo $value['detail'] ?? '' ?></td>
+                            <td class="d-none d-lg-table-cell"><?php echo str_replace('-&gt;', ' <i class="fas fa-arrow-right"></i> ', ($value['detail'] ?? '')) ?></td>
                             <td class="d-none d-lg-table-cell"><?php echo $value['comment'] ?? '' ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
-
-
             </div>
         </div>
-
-
     </div>
 </div>
