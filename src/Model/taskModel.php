@@ -12,10 +12,20 @@ use PDO;
 
 class TaskModel extends AppModel implements ModelInterface
 {
-    public function list(): array
+    public function list(?array $sortParams): array
     {
         try {
-            $query = "SELECT id, number, customer, type, priority, status FROM current_entries";
+            $sortPart = '';
+            if ($sortParams) {
+                //zamiana 0,1 na ASC, DESC
+                $sortParams['order'] = str_replace(
+                    [1, 2],
+                    ['ASC', 'DESC'],
+                    $sortParams['order']
+                );
+                $sortPart = 'ORDER BY ' . $sortParams['sortBy'] . ' ' . $sortParams['order'];
+            };
+            $query = "SELECT id, number, customer, type, priority, status FROM current_entries $sortPart";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {

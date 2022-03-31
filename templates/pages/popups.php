@@ -226,7 +226,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="taskUserSettings" tabindex="-1" aria-labelledby="taskStatusPopup" aria-hidden="true">
+<div class="modal fade" id="taskUserSettings" tabindex="-1" aria-labelledby="taskUserSettings" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -272,3 +272,53 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="taskSortFilterPopup" tabindex="-1" aria-labelledby="taskSortFilterPopup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sortowanie i filtrowanie listy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="/?action=changeParam">
+                <div class="modal-body">
+                    <fieldset class="row mb-3">
+                        <legend class="col-form-label col-sm-4 pt-0">Sortuj wg:</legend>
+                        <div class="col-sm-8">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                                <label class="form-check-label" for="gridRadios1">
+                                    Numer zgłoszenia
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                <label class="form-check-label" for="gridRadios2">
+                                    Klient
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                <label class="form-check-label" for="gridRadios2">
+                                    Priorytet
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                <label class="form-check-label" for="gridRadios2">
+                                    Status
+                                </label>
+                            </div>
+                            
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

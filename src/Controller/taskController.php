@@ -10,10 +10,27 @@ class TaskController extends AppController
 {
     public function list(): void
     {
+        $sort = null;
+        $order = $this->request->getParam('order');
+        if ($order) { //zabezpieczam, żeby ktoś nie pisał głupot w queryparams
+            $by = $this->request->getParam('sortBy') ?? 'id';
+            if(!in_array($by, ['id', 'customer', 'type', 'priority', 'status'])){
+                $by = 'id';
+            }
+            $order = $this->request->getParam('order') ?? '2';
+            if(!in_array($order, ['1', '2'])){
+                $order = '2';
+            }
+            $sort = [
+                'sortBy' => $by,
+                'order' => $order
+            ];
+        };
         $this->validateLogin();
         $this->view->render('list', [
-            'tasks' => $this->taskModel->list(),
+            'tasks' => $this->taskModel->list($sort),
             'status' => $this->request->getParam('status'),
+            'sort' => $sort,
         ]);
     }
 
@@ -75,7 +92,7 @@ class TaskController extends AppController
         $this->view->render('add', [
             'entryNumber' => $this->taskModel->generateNumber(),
             'created' => date('Y-m-d'),
-            'date' => date('Y-m-d', (strtotime("+".$this->userSetting->getSetting('task_period')."days"))),
+            'date' => date('Y-m-d', (strtotime("+" . $this->userSetting->getSetting('task_period') . "days"))),
             'types' =>  explode(';', $this->userSetting->getSetting('tasks_types')),
             'statuses' =>  explode(';', $this->userSetting->getSetting('status_types')),
         ]);

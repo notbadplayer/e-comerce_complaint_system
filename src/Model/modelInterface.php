@@ -5,7 +5,7 @@ namespace App\Model;
 
 interface ModelInterface
 {
-    public function list(): array;
+    public function list(?array $sortParams): array;
 
     public function get(int $id): array;
     
