@@ -15,16 +15,7 @@ class TaskModel extends AppModel implements ModelInterface
     public function list(?array $sortParams): array
     {
         try {
-            $sortPart = '';
-            if ($sortParams) {
-                //zamiana 0,1 na ASC, DESC
-                $sortParams['order'] = str_replace(
-                    [1, 2],
-                    ['ASC', 'DESC'],
-                    $sortParams['order']
-                );
-                $sortPart = 'ORDER BY ' . $sortParams['sortBy'] . ' ' . $sortParams['order'];
-            };
+            $sortPart = $this->sort($sortParams);
             $query = "SELECT id, number, customer, type, priority, status FROM current_entries $sortPart";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
@@ -174,10 +165,11 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function listArchive(): array
+    public function listArchive(?array $sortParams): array
     {
         try {
-            $query = "SELECT id, number, customer, type, priority, status FROM archive";
+            $sortPart = $this->sort($sortParams);
+            $query = "SELECT id, number, customer, type, priority, status FROM archive $sortPart";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
@@ -244,6 +236,21 @@ class TaskModel extends AppModel implements ModelInterface
         $checkQuery = "SELECT JSON_SEARCH(files, 'one', $filename) FROM current_entries WHERE id = $id";
         $result =  $this->connection->query($checkQuery)->fetchColumn();
         return ($result) ? true : false;
+    }
+
+    public function sort(?array $sortParams): string
+    {
+        $sortPart = '';
+        if ($sortParams) {
+            //zamiana 0,1 na ASC, DESC
+            $sortParams['order'] = str_replace(
+                [1, 2],
+                ['ASC', 'DESC'],
+                $sortParams['order']
+            );
+            $sortPart = 'ORDER BY ' . $sortParams['sortBy'] . ' ' . $sortParams['order'];
+        };
+        return $sortPart;
     }
 }
 //© K.Rogaczewski

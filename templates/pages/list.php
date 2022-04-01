@@ -62,12 +62,8 @@ switch ($params['status']) {
 
 <script>
     var th_sort = document.getElementsByClassName('th_sort');
-    var id = '<?php echo $params['sort']['order'] ?? 1 ?>';
-    //tutaj powinno być 'number', ale wbrew pozorom sortujemy po id a nie numerze zlecenia
-    var customer = '<?php echo $params['sort']['order'] ?? 1 ?>';
-    var type = '<?php echo $params['sort']['order'] ?? 1 ?>';
-    var priority = '<?php echo $params['sort']['order'] ?? 1 ?>';
-    var status = '<?php echo $params['sort']['order'] ?? 1 ?>';
+    id = customer = type = priority = status = '<?php echo $params['sort']['order'] ?? 1 ?>'; //przypisanie jednej wartości do wielu zmiennych
+    //korzystam z id a nie z number, bo w rzeczywistości sortuję po id
     for (let th of th_sort) {
         th.onclick = function() {
             changeParam(th.id);

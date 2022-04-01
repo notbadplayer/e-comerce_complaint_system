@@ -11,7 +11,7 @@ $history = json_decode($historytoDecode, true);
         <div class="container-fluid">
             <div><i class="far fa-file-alt me-2"></i>Podgląd zlecenia</div>
             <div>
-                <a href="/" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-1"></i><span class="d-none d-md-inline ms-1">Anuluj<span></a>
+                <button onclick="history.back()" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-1"></i><span class="d-none d-md-inline ms-1">Anuluj<span></button>
             </div>
         </div>
     </div>

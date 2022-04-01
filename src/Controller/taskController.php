@@ -10,22 +10,7 @@ class TaskController extends AppController
 {
     public function list(): void
     {
-        $sort = null;
-        $order = $this->request->getParam('order');
-        if ($order) { //zabezpieczam, żeby ktoś nie pisał głupot w queryparams
-            $by = $this->request->getParam('sortBy') ?? 'id';
-            if(!in_array($by, ['id', 'customer', 'type', 'priority', 'status'])){
-                $by = 'id';
-            }
-            $order = $this->request->getParam('order') ?? '2';
-            if(!in_array($order, ['1', '2'])){
-                $order = '2';
-            }
-            $sort = [
-                'sortBy' => $by,
-                'order' => $order
-            ];
-        };
+        $sort = $this->sortList();
         $this->validateLogin();
         $this->view->render('list', [
             'tasks' => $this->taskModel->list($sort),
@@ -210,9 +195,11 @@ class TaskController extends AppController
 
     public function listArchive(): void
     {
+        $sort = $this->sortList();
         $this->validateLogin();
         $this->view->render('archive', [
-            'tasks' => $this->taskModel->listArchive(),
+            'tasks' => $this->taskModel->listArchive($sort),
+            'sort' => $sort,
         ]);
     }
 
@@ -278,5 +265,25 @@ class TaskController extends AppController
             ]);
             exit();
         }
+    }
+    public function sortList(): ?array
+    {
+        $sort = null;
+        $order = $this->request->getParam('order');
+        if ($order) { //zabezpieczam, żeby ktoś nie pisał głupot w queryparams
+            $by = $this->request->getParam('sortBy') ?? 'id';
+            if (!in_array($by, ['id', 'customer', 'type', 'priority', 'status'])) {
+                $by = 'id';
+            }
+            $order = $this->request->getParam('order') ?? '2';
+            if (!in_array($order, ['1', '2'])) {
+                $order = '2';
+            }
+            $sort = [
+                'sortBy' => $by,
+                'order' => $order
+            ];
+        };
+        return $sort;
     }
 }
