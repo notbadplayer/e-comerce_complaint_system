@@ -31,11 +31,11 @@ class MailController
     public function registerTask(array $taskData, string $trackTask)
     {
         try {
-            $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
+            $this->mail->addAddress('notbadplayer@gmail.com', 'Klient Systemu Reklamacji');
             $this->mail->isHTML(true);
             $this->mail->Subject = 'Zarejestrowano nowe zgłoszenie reklamacyjne';
             $this->mail->Body = require_once('templates/mails/register.php');
-            $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $this->mail->AltBody = 'Zarejestrowano nowe zgłoszenie reklamacyjne';
             $this->mail->send();
         } catch (Exception $e) {
             throw new AppException('Błąd wysyłania maila.' . $this->mail->ErrorInfo);
@@ -45,11 +45,11 @@ class MailController
     public function changeParam(array $taskData, string $trackTask)
     {
         try {
-            $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
+            $this->mail->addAddress($taskData['email'], 'Klient Systemu Reklamacji');
             $this->mail->isHTML(true);
             $this->mail->Subject = $taskData['details']['actionMessage'];
             $this->mail->Body = require_once('templates/mails/changeParam.php');
-            $this->mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $this->mail->AltBody = $taskData['details']['actionMessage'];
             $this->mail->send();
         } catch (Exception $e) {
             throw new AppException('Błąd wysyłania maila.' . $this->mail->ErrorInfo);

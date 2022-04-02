@@ -13,8 +13,7 @@ class TaskController extends AppController
         $pageSize = (int) $this->request->getParam('pagesize', '50');
         $pageNumber = (int) $this->request->getParam('page', '1');
 
-        if(!in_array($pageSize, [30, 50, 100]))
-        {
+        if (!in_array($pageSize, [30, 50, 100])) {
             $pageSize = 50;
         }
         $sort = $this->sortList();
@@ -77,10 +76,10 @@ class TaskController extends AppController
             $id = $this->taskModel->add($taskData); //dodajemy wpis i pobieramy id
 
             // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
-            if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
+            if ($taskData['email'] && $this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
                 $taskData['entryNumber'] = $this->taskModel->generateNumber();
                 $trackTask = null;
-                if($this->userSetting->getSetting('mail_link')){
+                if ($this->userSetting->getSetting('mail_link')) {
                     $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
                 }
                 $this->mailController->registerTask($taskData, $trackTask);
@@ -181,19 +180,20 @@ class TaskController extends AppController
             // MAILING (jeżeli mail włączony i włączony dla poszczególnej akcji)
             if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_' . $taskAction)) {
                 $taskData = $this->taskModel->get((int) $this->request->postParam('id'));
-                $taskData['details'] = array(
-                    'actionMessage' => $actionMessage,
-                    'previousValue' =>  $this->request->postParam('previousValue'),
-                    'updatedValue' =>  $this->request->postParam('updatedValue'),
-                    'comment' =>  $this->request->postParam('comment'),
-                );
-                $trackTask = null;
-                if($this->userSetting->getSetting('mail_link')){
-                    $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
+                if ($taskData['email']) { //jeżeli w zgłoszeniu jest wpisany mail
+                    $taskData['details'] = array(
+                        'actionMessage' => $actionMessage,
+                        'previousValue' =>  $this->request->postParam('previousValue'),
+                        'updatedValue' =>  $this->request->postParam('updatedValue'),
+                        'comment' =>  $this->request->postParam('comment'),
+                    );
+                    $trackTask = null;
+                    if ($this->userSetting->getSetting('mail_link')) {
+                        $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
+                    }
+                    $this->mailController->changeParam($taskData, $trackTask);
                 }
-                $this->mailController->changeParam($taskData, $trackTask);
             }
-
             header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");
             exit();
         }
@@ -218,8 +218,7 @@ class TaskController extends AppController
         $pageSize = (int) $this->request->getParam('pagesize', '50');
         $pageNumber = (int) $this->request->getParam('page', '1');
 
-        if(!in_array($pageSize, [30, 50, 100]))
-        {
+        if (!in_array($pageSize, [30, 50, 100])) {
             $pageSize = 50;
         }
         $sort = $this->sortList();
