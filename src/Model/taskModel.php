@@ -12,11 +12,13 @@ use PDO;
 
 class TaskModel extends AppModel implements ModelInterface
 {
-    public function list(?array $sortParams): array
+    public function list(int $pageNumber, int $pageSize, ?array $sortParams): array
     {
         try {
+            $limit = $pageSize;
+            $offset = ($pageNumber - 1) * $pageSize;
             $sortPart = $this->sort($sortParams);
-            $query = "SELECT id, number, customer, type, priority, status FROM current_entries $sortPart";
+            $query = "SELECT id, number, customer, type, priority, status FROM current_entries $sortPart LIMIT $offset, $limit";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
@@ -165,11 +167,13 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function listArchive(?array $sortParams): array
+    public function listArchive(int $pageNumber, int $pageSize, ?array $sortParams): array
     {
         try {
+            $limit = $pageSize;
+            $offset = ($pageNumber - 1) * $pageSize;
             $sortPart = $this->sort($sortParams);
-            $query = "SELECT id, number, customer, type, priority, status FROM archive $sortPart";
+            $query = "SELECT id, number, customer, type, priority, status FROM archive $sortPart LIMIT $offset, $limit";
             $entries = $this->connection->query($query);
             return $entries->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
@@ -251,6 +255,23 @@ class TaskModel extends AppModel implements ModelInterface
             $sortPart = 'ORDER BY ' . $sortParams['sortBy'] . ' ' . $sortParams['order'];
         };
         return $sortPart;
+    }
+
+    public function taskCount()
+    {
+        try {
+            $query = "SELECT count(*) AS cn FROM current_entries";
+            $result = $this->connection->query($query);
+            $result =  $result->fetch(PDO::FETCH_ASSOC);
+  
+            if ($result)
+            {
+                return (int) $result['cn'];
+            }
+            return 0;
+        } catch (Throwable $e) {
+            throw new AppException('Błąd pobierania danych o ilości zleceń');
+        }
     }
 }
 //© K.Rogaczewski

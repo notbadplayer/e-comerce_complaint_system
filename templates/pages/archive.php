@@ -37,6 +37,10 @@ $tasks = $params['tasks'] ?? [];
     </div>
 
     <div class="card-footer">
+    <?php 
+        $paginatorRedirect = 'listArchive';
+        require_once('templates/pages/paginator.php'); 
+        ?>
     </div>
 </div>
 

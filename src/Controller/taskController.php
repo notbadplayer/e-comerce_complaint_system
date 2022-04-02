@@ -10,12 +10,24 @@ class TaskController extends AppController
 {
     public function list(): void
     {
+        $pageSize = (int) $this->request->getParam('pagesize', '50');
+        $pageNumber = (int) $this->request->getParam('page', '1');
+
+        if(!in_array($pageSize, [30, 50, 100]))
+        {
+            $pageSize = 50;
+        }
         $sort = $this->sortList();
         $this->validateLogin();
         $this->view->render('list', [
-            'tasks' => $this->taskModel->list($sort),
+            'tasks' => $this->taskModel->list($pageNumber, $pageSize, $sort),
             'status' => $this->request->getParam('status'),
             'sort' => $sort,
+            'page' => [
+                'number' => $pageNumber,
+                'size' => $pageSize,
+                'pages' => (int) ceil($this->taskModel->taskCount() / $pageSize)
+            ],
         ]);
     }
 
@@ -195,11 +207,23 @@ class TaskController extends AppController
 
     public function listArchive(): void
     {
+        $pageSize = (int) $this->request->getParam('pagesize', '50');
+        $pageNumber = (int) $this->request->getParam('page', '1');
+
+        if(!in_array($pageSize, [30, 50, 100]))
+        {
+            $pageSize = 50;
+        }
         $sort = $this->sortList();
         $this->validateLogin();
         $this->view->render('archive', [
-            'tasks' => $this->taskModel->listArchive($sort),
+            'tasks' => $this->taskModel->listArchive($pageNumber, $pageSize, $sort),
             'sort' => $sort,
+            'page' => [
+                'number' => $pageNumber,
+                'size' => $pageSize,
+                'pages' => (int) ceil($this->taskModel->taskCount() / $pageSize)
+            ],
         ]);
     }
 
@@ -266,9 +290,9 @@ class TaskController extends AppController
             exit();
         }
     }
-    public function sortList(): ?array
+    public function sortList(): array
     {
-        $sort = null;
+        $sort = [];
         $order = $this->request->getParam('order');
         if ($order) { //zabezpieczam, żeby ktoś nie pisał głupot w queryparams
             $by = $this->request->getParam('sortBy') ?? 'id';

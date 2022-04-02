@@ -20,7 +20,11 @@ switch ($params['status']) {
     <div class="navbar navbar-expand-lg navbar-light bg-light h5">
         <div class="container-fluid">
             <div><i class="fas fa-list me-2"></i>Lista zleceń</div>
+            <div>
+                <a href="/?action=add" class="btn btn-primary btn-sm"><i class="fas fa-plus me-1"></i><span class="d-none d-md-inline ms-1">Dodaj<span></a>
+            </div>
         </div>
+
     </div>
 
     <div class="card-body">
@@ -56,7 +60,10 @@ switch ($params['status']) {
     </div>
 
     <div class="card-footer">
-        <a href="/?action=add" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Dodaj nowe zlecenie</a>
+        <?php 
+        $paginatorRedirect = 'list';
+        require_once('templates/pages/paginator.php'); 
+        ?>
     </div>
 </div>
 
@@ -80,6 +87,6 @@ switch ($params['status']) {
     }
 
     function reloadPage(column) {
-        window.location.href = '/?sortBy=' + column + '&order=' + window[column];
+        window.location.href = '/?sortBy=' + column + '&order=' + window[column] + '&pagesize=' + <?php echo $pagesize; ?>;
     }
 </script>
