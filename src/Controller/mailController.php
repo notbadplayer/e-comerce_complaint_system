@@ -28,7 +28,7 @@ class MailController
         $this->mail->AddEmbeddedImage('templates/img/logo13.png', 'logo');
     }
 
-    public function registerTask(array $taskData)
+    public function registerTask(array $taskData, string $trackTask)
     {
         try {
             $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');
@@ -42,7 +42,7 @@ class MailController
         }
     }
 
-    public function changeParam(array $taskData)
+    public function changeParam(array $taskData, string $trackTask)
     {
         try {
             $this->mail->addAddress('notbadplayer@gmail.com', 'Joe User');

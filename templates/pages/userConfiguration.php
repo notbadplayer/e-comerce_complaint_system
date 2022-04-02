@@ -35,7 +35,7 @@ switch ($params['status'] ?? '') {
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                     <div class="col">
 
-                        <div class="card p-3" style="height: 25rem;">
+                        <div class="card p-1 p-md-3" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="far fa-envelope me-2"></i>Mailing</h5>
                                 <div class="form-check form-switch mb-2 mb-lg-4">
@@ -76,6 +76,14 @@ switch ($params['status'] ?? '') {
                                                 <label class="form-check-label" for="mail_term">zmianie terminu realizacji</label>
                                             </div>
                                         </div>
+                                        
+                                        <div class="row mt-4 mb-2">
+                                        <hr class="dropdown-divider">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input mail_secondary" name="mail_link" type="checkbox" role="switch" value="1" id="mail_link" <?php echo (isset($userConfiguration['mail_link']) && $userConfiguration['mail_link'] === '1' ? 'checked' : '') ?>>
+                                                <label class="form-check-label" for="mail_link">dodaj link do śledzenia w mailu</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -84,7 +92,7 @@ switch ($params['status'] ?? '') {
                     </div>
 
                     <div class="col">
-                        <div class="card p-3 <?php echo (isset($messages['task_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
+                        <div class="card p-1 p-md-3 <?php echo (isset($messages['task_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-bars me-2"></i>Typy zleceń</h5>
                                 <div class="mb-2">Zdefiniuj typy zleceń:</div>
@@ -104,7 +112,7 @@ switch ($params['status'] ?? '') {
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card p-3 <?php echo (isset($messages['status_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
+                        <div class="card p-1 p-md-3 <?php echo (isset($messages['status_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-tasks me-2"></i>Statusy zleceń</h5>
                                 <div class="mb-2">Zdefiniuj statusy zleceń:</div>
@@ -124,13 +132,13 @@ switch ($params['status'] ?? '') {
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card p-3" style="height: 25rem;">
+                        <div class="card p-1 p-md-3" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-ellipsis-h me-2"></i>Inne ustawienia</h5>
                                 <div class="row row-cols-1 row-cols-xl-2 g-0 mb-2">
                                     <label for="taskPeriod" class="col col-form-label-sm">Domyślny czas realizacji: <span id="rangeValueView"></span> dni</label>
                                     <div class="col">
-                                        <input type="range" name="taskPeriod" class="form-range" min="1" max="14" step="1" id="taskPeriod" value="<?php echo $userConfiguration['task_period']?>">
+                                        <input type="range" name="taskPeriod" class="form-range" min="1" max="14" step="1" id="taskPeriod" value="<?php echo $userConfiguration['task_period'] ?>">
                                     </div>
                                 </div>
 
@@ -143,7 +151,7 @@ switch ($params['status'] ?? '') {
             </div>
     </div>
     <div class="card-footer text-end">
-    <a href="/" class="btn btn-secondary"><i class="fas fa-chevron-left me-1"></i><span class="ms-1">Anuluj<span></a>
+        <a href="/" class="btn btn-secondary"><i class="fas fa-chevron-left me-1"></i><span class="ms-1">Anuluj<span></a>
         <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
         </form>
     </div>

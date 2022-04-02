@@ -37,7 +37,7 @@ class TaskModel extends AppModel implements ModelInterface
         }
     }
 
-    public function add(array $taskData): void
+    public function add(array $taskData): string
     {
         try {
             $number = $this->connection->quote($this->generateNumber());
@@ -65,6 +65,7 @@ class TaskModel extends AppModel implements ModelInterface
             if ($taskData['file']) { //jeżeli dodajemy plik przy nowym zleceniu to:
                 $this->addFile((int) $this->connection->lastInsertId(), $taskData['file']);
             }
+            return $this->connection->lastInsertId();
         } catch (Throwable $e) {
             throw new AppException('Błąd podczas dodawania nowego zlecenia');
         }
@@ -257,10 +258,10 @@ class TaskModel extends AppModel implements ModelInterface
         return $sortPart;
     }
 
-    public function taskCount()
+    public function taskCount(string $table)
     {
         try {
-            $query = "SELECT count(*) AS cn FROM current_entries";
+            $query = "SELECT count(*) AS cn FROM $table";
             $result = $this->connection->query($query);
             $result =  $result->fetch(PDO::FETCH_ASSOC);
   

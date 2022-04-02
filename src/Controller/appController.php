@@ -81,6 +81,7 @@ abstract class AppController
                 'mail_priority' => $this->request->postParam('mail_priority'),
                 'mail_status' => $this->request->postParam('mail_status'),
                 'mail_term' =>  $this->request->postParam('mail_term'),
+                'mail_link' =>  $this->request->postParam('mail_link'),
                 'tasks_types' => $task_types,
                 'status_types' => $status_types,
                 'task_period' => $this->request->postParam('taskPeriod'),

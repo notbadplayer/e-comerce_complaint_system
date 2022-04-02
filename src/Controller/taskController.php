@@ -26,7 +26,7 @@ class TaskController extends AppController
             'page' => [
                 'number' => $pageNumber,
                 'size' => $pageSize,
-                'pages' => (int) ceil($this->taskModel->taskCount() / $pageSize)
+                'pages' => (int) ceil($this->taskModel->taskCount('current_entries') / $pageSize)
             ],
         ]);
     }
@@ -74,12 +74,16 @@ class TaskController extends AppController
             if (!($taskData['file']->getFileSize())) {
                 $taskData['file'] = null;
             }
-            $this->taskModel->add($taskData); //dodajemy wpis
+            $id = $this->taskModel->add($taskData); //dodajemy wpis i pobieramy id
 
             // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
             if ($this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
                 $taskData['entryNumber'] = $this->taskModel->generateNumber();
-                $this->mailController->registerTask($taskData);
+                $trackTask = null;
+                if($this->userSetting->getSetting('mail_link')){
+                    $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
+                }
+                $this->mailController->registerTask($taskData, $trackTask);
             }
 
             header('location:/?status=added');
@@ -164,9 +168,9 @@ class TaskController extends AppController
                     $actionMessage = 'zmiana terminu zgłoszenia';
                     break;
             }
-
+            $id = $this->request->postParam('id');
             $this->taskModel->changeParam(
-                $this->request->postParam('id'),
+                $id,
                 $taskAction,
                 $actionMessage,
                 $this->request->postParam('previousValue'),
@@ -183,7 +187,11 @@ class TaskController extends AppController
                     'updatedValue' =>  $this->request->postParam('updatedValue'),
                     'comment' =>  $this->request->postParam('comment'),
                 );
-                $this->mailController->changeParam($taskData);
+                $trackTask = null;
+                if($this->userSetting->getSetting('mail_link')){
+                    $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
+                }
+                $this->mailController->changeParam($taskData, $trackTask);
             }
 
             header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");
@@ -222,7 +230,7 @@ class TaskController extends AppController
             'page' => [
                 'number' => $pageNumber,
                 'size' => $pageSize,
-                'pages' => (int) ceil($this->taskModel->taskCount() / $pageSize)
+                'pages' => (int) ceil($this->taskModel->taskCount('archive') / $pageSize)
             ],
         ]);
     }

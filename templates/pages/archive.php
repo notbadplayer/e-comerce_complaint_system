@@ -28,7 +28,7 @@ $tasks = $params['tasks'] ?? [];
                         <td class="d-none d-lg-table-cell"><?php echo $task['priority'] ?></td>
                         <td class="d-none d-md-table-cell"><?php echo $task['status'] ?></td>
                         <td>
-                            <a href="/?action=showArchived&id=<?php echo $task['id'] ?>" class="btn btn-secondary btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
+                            <a href="/?action=showArchived&id=<?php echo $task['id'] ?>" class="btn btn-sm"><i class="far fa-eye"></i><span class="d-none d-lg-inline ms-1">Podgląd<span></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

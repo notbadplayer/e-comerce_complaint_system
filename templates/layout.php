@@ -22,14 +22,14 @@
             <?php if (!empty($_SESSION['login'])) : ?>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link " aria-current="page" href="/">Lista zleceń</a>
-                        <a class="nav-link" href="/?action=add">Dodaj zlecenie</a>
-                        <a class="nav-link" href="/?action=listArchive">Przeglądaj archiwum</a>
+                        <a class="nav-link <?php echo(isset($page) && $page === 'list') ? 'active' : ''?>" aria-current="page" href="/">Lista zleceń</a>
+                        <a class="nav-link <?php echo(isset($page) && $page === 'add') ? 'active' : ''?>" href="/?action=add">Dodaj zlecenie</a>
+                        <a class="nav-link <?php echo(isset($page) && $page === 'archive') ? 'active' : ''?>" href="/?action=listArchive">Przeglądaj archiwum</a>
                     </div>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown-menu-end">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?php echo $_SESSION['login'] ?>
+                            <i class="fas fa-user me-2"></i><?php echo $_SESSION['login'] ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="/?action=changeUserSettings"><i class="fas fa-cog me-2"></i>Ustawienia</a></li>
@@ -44,6 +44,7 @@
     </nav>
 
     <div class="container">
+        
         <?php
         require_once("templates/pages/$page.php");
         require_once("templates/pages/popups.php");

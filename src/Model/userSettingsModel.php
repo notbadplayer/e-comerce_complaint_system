@@ -45,6 +45,7 @@ class UserSettingsModel extends AppModel
                 $mail_priority = (int) $userConfiguration['mail_priority'];
                 $mail_status = (int) $userConfiguration['mail_status'];
                 $mail_term = (int) $userConfiguration['mail_term'];
+                $mail_link = (int) $userConfiguration['mail_link'];
                 //Może to trochę bez sensu, ale to wina boostrapa, bo on na switchu wysyła wartości "on" i NULL,
                 //więc najpierw rzutuję to gówno do boola, później niestety musże to dać na inta, bo mySql 
                 //nie przyjmuje wartości boolowskich
@@ -54,7 +55,8 @@ class UserSettingsModel extends AppModel
                 mail_type = $mail_type,
                 mail_priority = $mail_priority,
                 mail_status = $mail_status,
-                mail_term = $mail_term";
+                mail_term = $mail_term,
+                mail_link = $mail_link";
             }
 
             //część odpowiedzialna za zapis typów i statusów zleceń:
