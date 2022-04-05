@@ -22,7 +22,7 @@ class UserSettingsModel extends AppModel
         }
     }
 
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         try {
             $query = "SELECT * FROM user_settings";
@@ -33,7 +33,7 @@ class UserSettingsModel extends AppModel
         }
     }
 
-    public function saveConfiguration(array $userConfiguration)
+    public function saveConfiguration(array $userConfiguration): void
     {
         try {
             $enableMails = (int) $userConfiguration['enableMails'];

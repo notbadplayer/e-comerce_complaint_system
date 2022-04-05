@@ -46,7 +46,7 @@ class AppModel
         }
     }
 
-    public function validateLogin(string $user, string $password)
+    public function validateLogin(string $user, string $password): bool
     {
         try {
             $user = $this->connection->quote($user);

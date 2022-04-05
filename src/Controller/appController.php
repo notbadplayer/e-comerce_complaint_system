@@ -121,7 +121,7 @@ abstract class AppController
         ]);
     }
 
-    protected function getLogo()
+    protected function getLogo(): string
     {
         $logoFromDb = $this->userSetting->getSetting('logo');
         $logoToDecode = str_replace('&quot;', '"', ($logoFromDb ?? ''));
@@ -138,7 +138,7 @@ abstract class AppController
         }
     }
 
-    protected function login()
+    protected function login(): void
     {
         if ($this->request->hasPost()) {
             $validatedUser = $this->taskModel->validateLogin($this->request->postParam('username'), $this->request->postParam('password'));
@@ -153,7 +153,7 @@ abstract class AppController
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
         session_destroy();
         header("location:/");

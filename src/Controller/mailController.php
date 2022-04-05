@@ -27,10 +27,10 @@ class MailController
         $this->mail->CharSet = "UTF-8";
     }
 
-    public function registerTask(array $taskData, ?string $trackTask, string $logoLocation)
+    public function registerTask(array $taskData, ?string $trackTask, string $logoLocation): void
     {
         try {
-            $this->mail->addAddress('notbadplayer@gmail.com', 'Klient Systemu Reklamacji');
+            $this->mail->addAddress($taskData['email'], 'Klient Systemu Reklamacji');
             $this->mail->isHTML(true);
             if($logoLocation){
                 $this->mail->AddEmbeddedImage($logoLocation, 'logo');
@@ -46,7 +46,7 @@ class MailController
         }
     }
 
-    public function changeParam(array $taskData, ?string $trackTask, string $logoLocation)
+    public function changeParam(array $taskData, ?string $trackTask, string $logoLocation): void
     {
         try {
             $this->mail->addAddress($taskData['email'], 'Klient Systemu Reklamacji');

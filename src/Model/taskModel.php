@@ -258,7 +258,7 @@ class TaskModel extends AppModel implements ModelInterface
         return $sortPart;
     }
 
-    public function taskCount(string $table)
+    public function taskCount(string $table): int
     {
         try {
             $query = "SELECT count(*) AS cn FROM $table";
