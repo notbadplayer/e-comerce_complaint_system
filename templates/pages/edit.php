@@ -160,14 +160,14 @@ switch ($params['status'] ?? '') {
             <div class="row mb-2">
                 <label for="description" class="col-lg-2 col-form-label-sm">Opis zlecenia:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>">
+                    <textarea rows="5" style="resize:none" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description"><?php echo $taskData['description'] ?? '' ?></textarea>
                     <?php foreach ($messages['description'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <div class="row mt-5 mb-2 border rounded <?php echo (isset($messages['file']) ? 'border border-danger' : '') ?>">
+            <div class="row mt-5 mb-2 mx-1 border rounded <?php echo (isset($messages['file']) ? 'border border-danger' : '') ?>">
                 <div class="d-inline fs-6 ">Lista dołączonych plików: <a class="btn btn-sm fs-5 link-primary" data-bs-toggle="modal" data-bs-target="#taskAddFile"><i class="fas fa-plus-circle"></i></a></div>
                 <?php foreach ($messages['file'] ?? [] as $message) : ?>
                     <span class="text-danger"><?php echo $message ?></span>
@@ -187,7 +187,7 @@ switch ($params['status'] ?? '') {
                 <?php endif; ?>
             </div>
 
-            <div class="row justify-content-between">
+            <div class="row justify-content-around mx-1">
                 <button type="submit" class="btn btn-primary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
                 <a class="text-decoration-none btn btn-primary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3" data-bs-toggle="modal" data-bs-target="#taskOtherPopup"><i class="fas fa-feather-alt me-2"></i>Dodaj inne zdarzenie</a>
                 <a class="text-decoration-none btn btn-secondary btn-sm me-3 mt-4 d-inline-block col-12 col-lg-3" data-bs-toggle="modal" data-bs-target="#taskArchivePopup"><i class="fas fa-archive me-2"></i>Przenieś do archiwum</a>

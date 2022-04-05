@@ -264,9 +264,8 @@ class TaskModel extends AppModel implements ModelInterface
             $query = "SELECT count(*) AS cn FROM $table";
             $result = $this->connection->query($query);
             $result =  $result->fetch(PDO::FETCH_ASSOC);
-  
-            if ($result)
-            {
+
+            if ($result) {
                 return (int) $result['cn'];
             }
             return 0;
@@ -274,5 +273,6 @@ class TaskModel extends AppModel implements ModelInterface
             throw new AppException('Błąd pobierania danych o ilości zleceń');
         }
     }
+
 }
 //© K.Rogaczewski

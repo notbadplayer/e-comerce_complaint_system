@@ -9,6 +9,7 @@ use App\Request;
 use App\Validate;
 use App\View\View;
 use App\Controller\mailController;
+use App\Exceptions\AppException;
 use App\Model\UserSettingsModel;
 
 session_start();
@@ -85,6 +86,7 @@ abstract class AppController
                 'tasks_types' => $task_types,
                 'status_types' => $status_types,
                 'task_period' => $this->request->postParam('taskPeriod'),
+                'logo' => new fileController($_FILES['logo']), //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
             ];
    
             $validatedConfiguration = $this->validator->validate($userConfiguration);
@@ -97,6 +99,14 @@ abstract class AppController
                 ]);
                 exit();
             }
+            //Zapisywanie logo:
+            if ($userConfiguration['logo']->getFileSize()) {
+                $this->userSetting->removeLogo(); //sunięcie starego logo
+                $userConfiguration['logo']->storeFile('logo'); //fizyczne zapisanie logo na dysku
+                $this->userSetting->saveLogo($userConfiguration['logo']); //dodanie informacji o pliku do bazy danych
+
+            }
+            //zapis całej konfiguracji (logo zapisaliśmy wcześniej)
             $this->userSetting->saveConfiguration($userConfiguration);
             $this->view->render('userConfiguration', [
                 'userConfiguration' => $this->userSetting->getConfiguration(),

@@ -23,6 +23,7 @@ class Validate
         (isset($data['fileExists']) ? $this->fileExistRule($data['fileExists']) : false);
         (isset($data['tasks_types']) ? $this->userConfigurationTaskTypesRule($data['tasks_types']) : false);
         (isset($data['status_types']) ? $this->userConfigurationStatusTypesRule($data['status_types']) : false);
+        (isset($data['logo']) ? $this->logoRules($data['logo']) : false);
 
         if (isset($data['term'])) { //to zapobiega walidacji terminu podczas 'standardowej' aktualizacji wpisu, tam te pola nie są przesyłane, walidacja zbędna.
             $this->termRules($data['term'], $data['created']);
@@ -147,6 +148,24 @@ class Validate
         if (count($statusTypes)<2) { 
             $this->messages['status_types'][] = "Wymagane jest zdefiniowanie przynajmniej dwóch statusów zgłoszeń";
             $this->pass = false;
+        }
+    }
+    private function logoRules(fileController $param): void
+    {
+        if ($param->getFileSize()) { //jeżeli plik jest dodany to waludujemy, jeśli nie, to pomijam walidację
+            $acceptedFileTypes = ['jpg', 'jpeg', 'png'];
+            $maxFileSize = 1024; //max rozmiar pliku w KB 
+            if (!(in_array($param->getFileType(), $acceptedFileTypes))) {
+                $this->messages['logo'][] = "Niedozwolony typ pliku. Dozwolone rozrzerzenia to: " . implode(", ", $acceptedFileTypes);
+                $this->pass = false;
+            } elseif ($param->getFileSize() >= $maxFileSize) {
+                $this->messages['logo'][] = "Maksymalny rozmiar pliku to: " . ($maxFileSize / 1024) . " MB";
+                $this->pass = false;
+            }
+            if (strlen($param->getFileName()) > 40) {
+                $this->messages['logo'][] = "Zbyt długa nazwa pliku.";
+                $this->pass = false;
+            }
         }
     }
 }

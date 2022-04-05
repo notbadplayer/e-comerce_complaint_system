@@ -4,9 +4,9 @@ if($trackTask){
     $trackPart = "Link do śledzenia Twojego zgłoszenia:<br/> <a href='$trackTask'>Śledź zgłoszenie</a>";
 };
 return  "
-<img class='mb-4' src='cid:logo' alt='logo' width='300' height='151' style='display: block; margin-left: auto; margin-right: auto'>
+<img class='mb-4' src='cid:logo' alt='logo' style='display: block; margin-left: auto; margin-right: auto'>
 <br/>
-<b>Zarejestrowano nowe zgłoszenie reklamacyjne o numerze: ". $taskData['entryNumber']." </b>
+<b>Zarejestrowano nowe zgłoszenie reklamacyjne</b>
 <br/><br/>
 Dane dotyczące zgłoszenia: <br/><br/>
 Zleceniodawca: <b>". $taskData['customer']."</b><br/>

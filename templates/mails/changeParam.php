@@ -5,7 +5,7 @@ if($trackTask){
 };
 return "
 <html lang='pl'>
-<img class='mb-4' src='cid:logo' alt='logo' width='300' height='151' style='display: block; margin-left: auto; margin-right: auto'>
+<img class='mb-4' src='cid:logo' alt='logo' style='display: block; margin-left: auto; margin-right: auto'>
 <br/>
 <b>". $taskData['details']['actionMessage']." o numerze: ". $taskData['number']." </b>
 <br/><br/>

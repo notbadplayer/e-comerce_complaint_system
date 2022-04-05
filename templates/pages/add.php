@@ -90,7 +90,7 @@ $statusTypes = $params['statuses'] ?? [];
                 <label for="status" class="col-lg-2 col-form-label-sm">Status:</label>
                 <div class="col-lg-4">
                     <select name="status" class="form-select-sm col-12 border" id="status">
-                        <option value="<?php echo $statusTypes[0]?>" selected><?php echo $statusTypes[0]?></option>
+                        <option value="<?php echo $statusTypes[0] ?>" selected><?php echo $statusTypes[0] ?></option>
                     </select>
                 </div>
             </div>
@@ -108,7 +108,7 @@ $statusTypes = $params['statuses'] ?? [];
             <div class="row mb-2">
                 <label for="description" class="col-lg-2 col-form-label-sm">Opis zlecenia:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>">
+                    <textarea rows="5" style="resize:none" class="form-control form-control-sm <?php echo (isset($messages['description']) ? 'is-invalid' : '') ?>" id="description" placeholder="Wpisz opis zlecenia" name="description"><?php echo $taskData['description'] ?? '' ?></textarea>
                     <?php foreach ($messages['description'] ?? [] as $message) : ?>
                         <span class="text-danger"><?php echo $message ?></span>
                     <?php endforeach; ?>

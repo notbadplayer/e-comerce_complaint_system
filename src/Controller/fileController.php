@@ -40,9 +40,9 @@ class fileController
         return (float) (($this->file['size']) / 1024);
     }
 
-    public function storeFile($id): void
+    public function storeFile($location): void
     {
-        $this->target_dir = "uploads/$id/";
+        $this->target_dir = "uploads/$location/";
         if (!is_dir($this->target_dir)) {
             mkdir($this->target_dir);
         }

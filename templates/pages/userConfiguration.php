@@ -2,6 +2,14 @@
 $userConfiguration = $params['userConfiguration'];
 $taskTypes = explode(';', $userConfiguration['tasks_types']);
 $statusTypes = explode(';', $userConfiguration['status_types']);
+//jeżeli nie przechodzimy walidacji, pod zmienną $userConfiguration['logo'] znajduje się obiekt fileCotroller, 
+//musimy jego metodą pobrać nazwę pliku
+if(gettype($userConfiguration['logo']) == 'string' || $userConfiguration['logo'] == null){
+    $logoToDecode = str_replace('&quot;', '"', ($userConfiguration['logo'] ?? ''));
+    $logoName = (json_Decode($logoToDecode, true) ?? [])['logo']['filename'] ?? '';
+} else {
+    $logoName = $userConfiguration['logo']->getFileName();
+}
 $messages = $params['messages'] ?? [];
 switch ($params['status'] ?? '') {
     case 'configModified':
@@ -28,14 +36,14 @@ switch ($params['status'] ?? '') {
         </div>
     </div>
 
-    <div class="card-body p-0 p-md-2 p-xl-5">
+    <div class="card-body p-0 p-md-2 p-xl-3">
 
-        <form method="post" action="/?action=changeUserSettings">
+        <form method="post" action="/?action=changeUserSettings" enctype="multipart/form-data">
             <div class="container">
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                     <div class="col">
 
-                        <div class="card p-1 p-md-3" style="height: 25rem;">
+                        <div class="card p-1 p-md-2" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="far fa-envelope me-2"></i>Mailing</h5>
                                 <div class="form-check form-switch mb-2 mb-lg-4">
@@ -76,9 +84,9 @@ switch ($params['status'] ?? '') {
                                                 <label class="form-check-label" for="mail_term">zmianie terminu realizacji</label>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row mt-4 mb-2">
-                                        <hr class="dropdown-divider">
+                                            <hr class="dropdown-divider">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input mail_secondary" name="mail_link" type="checkbox" role="switch" value="1" id="mail_link" <?php echo (isset($userConfiguration['mail_link']) && $userConfiguration['mail_link'] === '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_link">dodaj link do śledzenia w mailu</label>
@@ -92,7 +100,7 @@ switch ($params['status'] ?? '') {
                     </div>
 
                     <div class="col">
-                        <div class="card p-1 p-md-3 <?php echo (isset($messages['task_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
+                        <div class="card p-1 p-md-2 <?php echo (isset($messages['task_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-bars me-2"></i>Typy zleceń</h5>
                                 <div class="mb-2">Zdefiniuj typy zleceń:</div>
@@ -112,7 +120,7 @@ switch ($params['status'] ?? '') {
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card p-1 p-md-3 <?php echo (isset($messages['status_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
+                        <div class="card p-1 p-md-2 <?php echo (isset($messages['status_types']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-tasks me-2"></i>Statusy zleceń</h5>
                                 <div class="mb-2">Zdefiniuj statusy zleceń:</div>
@@ -132,7 +140,7 @@ switch ($params['status'] ?? '') {
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card p-1 p-md-3" style="height: 25rem;">
+                        <div class="card p-1 p-md-2 <?php echo (isset($messages['logo']) ? 'border border-danger' : '') ?>" style="height: 25rem;">
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="fas fa-ellipsis-h me-2"></i>Inne ustawienia</h5>
                                 <div class="row row-cols-1 row-cols-xl-2 g-0 mb-2">
@@ -141,18 +149,23 @@ switch ($params['status'] ?? '') {
                                         <input type="range" name="taskPeriod" class="form-range" min="1" max="14" step="1" id="taskPeriod" value="<?php echo $userConfiguration['task_period'] ?>">
                                     </div>
                                 </div>
-
+                                <div class="row row-cols-1 row-cols-xl-2 g-0 mb-2">
+                                    <span class="col-lg-8 col-form-label-sm"><?php echo ($logoName) ? 'Zmień obecne logo: '.$logoName : 'Dodaj logo'; ?></span>
+                                    <div class="col-lg-12">
+                                        <input type="file" class="form-control form-control-sm <?php echo (isset($messages['logo']) ? 'is-invalid' : '') ?>" id="logo" name="logo">
+                                    </div>
+                                </div>
+                                <?php foreach ($messages['logo'] ?? [] as $message) : ?>
+                                    <span class="text-danger"><?php echo $message ?></span>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-    </div>
-    <div class="card-footer text-end">
-        <a href="/" class="btn btn-secondary"><i class="fas fa-chevron-left me-1"></i><span class="ms-1">Anuluj<span></a>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
+            <div class="card-footer text-end mt-5">
+                <a href="/" class="btn btn-secondary"><i class="fas fa-chevron-left me-1"></i><span class="ms-1">Anuluj<span></a>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check me-2"></i>Zapisz zmiany</button>
         </form>
     </div>
 </div>
@@ -225,4 +238,6 @@ switch ($params['status'] ?? '') {
     rangeBar.addEventListener("change", function(event) {
         rangeValueView.textContent = rangeBar.value;
     });
+
+    //wpisanie nazwy pliku w inpucie 'logo'
 </script>

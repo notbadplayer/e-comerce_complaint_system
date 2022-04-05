@@ -89,11 +89,11 @@ $history = json_decode($historytoDecode, true);
             <div class="row mb-2">
                 <label for="description" class="col-lg-2 col-form-label-sm">Opis zlecenia:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control form-control-sm" id="description" placeholder="Wpisz opis zlecenia" name="description" value="<?php echo $taskData['description'] ?? '' ?>" disabled>
+                    <textarea rows="5" style="resize:none" class="form-control form-control-sm" id="description" placeholder="Wpisz opis zlecenia" name="description" disabled><?php echo $taskData['description'] ?? '' ?></textarea>
                 </div>
             </div>
 
-            <div class="row mt-5 mb-2 border rounded">
+            <div class="row mt-5 mx-1 mb-2 border rounded">
                 <div class="d-inline fs-6 mb-2">Lista dołączonych plików:</div>
                 <?php if (count($files)) : ?>
                     <ul class="list-unstyled">

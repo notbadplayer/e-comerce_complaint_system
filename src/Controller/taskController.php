@@ -77,12 +77,14 @@ class TaskController extends AppController
 
             // MAILING (jeżeli mail włączony i wysyłamy po rejestracji zgłoszenia)
             if ($taskData['email'] && $this->userSetting->getSetting('enableMails') && $this->userSetting->getSetting('mail_register')) {
-                $taskData['entryNumber'] = $this->taskModel->generateNumber();
                 $trackTask = null;
                 if ($this->userSetting->getSetting('mail_link')) {
                     $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
                 }
-                $this->mailController->registerTask($taskData, $trackTask);
+                $logoFromDb = $this->userSetting->getSetting('logo');
+                $logoToDecode = str_replace('&quot;', '"', ($logoFromDb ?? ''));
+                $logoLocation = (json_Decode($logoToDecode, true) ?? [])['logo']['location'] ?? '';
+                $this->mailController->registerTask($taskData, $trackTask, $logoLocation);
             }
 
             header('location:/?status=added');
@@ -191,7 +193,10 @@ class TaskController extends AppController
                     if ($this->userSetting->getSetting('mail_link')) {
                         $trackTask = $_SERVER['SERVER_NAME'] . "?action=show&id=$id";
                     }
-                    $this->mailController->changeParam($taskData, $trackTask);
+                    $logoFromDb = $this->userSetting->getSetting('logo');
+                    $logoToDecode = str_replace('&quot;', '"', ($logoFromDb ?? ''));
+                    $logoLocation = (json_Decode($logoToDecode, true) ?? [])['logo']['location'] ?? '';
+                    $this->mailController->changeParam($taskData, $trackTask, $logoLocation);
                 }
             }
             header("location:/?action=edit&id=" . $this->request->postParam('id') . "&status=paramChanged");

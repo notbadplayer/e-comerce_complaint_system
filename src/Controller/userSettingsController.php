@@ -29,4 +29,14 @@ class userSettingsController
     {
         $this->userSettingsModel->saveConfiguration($userConfiguration);
     }
+
+    public function saveLogo(fileController $logo): void
+    {
+        $this->userSettingsModel->saveLogo($logo);
+    }
+
+    public function removeLogo(): void
+    {
+        $this->userSettingsModel->removeLogo();
+    }
 }
