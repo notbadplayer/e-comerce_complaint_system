@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 20 Lut 2022, 14:21
+-- Czas generowania: 05 Kwi 2022, 20:18
 -- Wersja serwera: 10.4.19-MariaDB
 -- Wersja PHP: 7.4.19
 
@@ -40,7 +40,8 @@ CREATE TABLE `archive` (
   `status` varchar(20) NOT NULL,
   `term` date NOT NULL,
   `description` text NOT NULL,
-  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `files` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -62,7 +63,8 @@ CREATE TABLE `current_entries` (
   `status` varchar(20) NOT NULL,
   `term` date NOT NULL,
   `description` text NOT NULL,
-  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `files` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -76,6 +78,41 @@ CREATE TABLE `users` (
   `user` varchar(80) NOT NULL,
   `password` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `users`
+--
+
+INSERT INTO `users` (`id`, `user`, `password`) VALUES
+(1, 'aaa', 'bbb');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `user_settings`
+--
+
+CREATE TABLE `user_settings` (
+  `enableMails` tinyint(1) DEFAULT 0,
+  `mail_register` tinyint(1) DEFAULT 0,
+  `mail_type` tinyint(1) NOT NULL DEFAULT 0,
+  `mail_priority` tinyint(1) NOT NULL DEFAULT 0,
+  `mail_status` tinyint(1) DEFAULT 0,
+  `mail_term` tinyint(1) NOT NULL DEFAULT 0,
+  `mail_link` tinyint(1) NOT NULL DEFAULT 0,
+  `tasks_types` text NOT NULL DEFAULT 'zwrot;gwarancyjne',
+  `status_types` text NOT NULL DEFAULT 'przyjęte;w trakcie realizacji;zrealizowane;anulowane',
+  `task_period` smallint(6) NOT NULL DEFAULT 7,
+  `logo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `user_settings`
+--
+
+INSERT INTO `user_settings` (`enableMails`, `mail_register`, `mail_type`, `mail_priority`, `mail_status`, `mail_term`, `mail_link`, `tasks_types`, `status_types`, `task_period`, `logo`) VALUES
+(1, 1, 1, 0, 1, 1, 1, 'zwrot;gwarancyjne', 'przyjęte;w trakcie realizacji;zrealizowane;anulowane', 7, NULL),
+(1, 1, 1, 0, 1, 1, 1, 'zwrot;gwarancyjne', 'przyjęte;w trakcie realizacji;zrealizowane;anulowane', 7, NULL);
 
 --
 -- Indeksy dla zrzutów tabel
@@ -119,7 +156,7 @@ ALTER TABLE `current_entries`
 -- AUTO_INCREMENT dla tabeli `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
