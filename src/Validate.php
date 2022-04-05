@@ -161,6 +161,9 @@ class Validate
             } elseif ($param->getFileSize() >= $maxFileSize) {
                 $this->messages['logo'][] = "Maksymalny rozmiar pliku to: " . ($maxFileSize / 1024) . " MB";
                 $this->pass = false;
+            }elseif (strpos($param->getFileName(), ' ')) {
+                $this->messages['logo'][] = "plik nie może zawierać spacji w swojej nazwie";
+                $this->pass = false;
             }
             if (strlen($param->getFileName()) > 40) {
                 $this->messages['logo'][] = "Zbyt długa nazwa pliku.";

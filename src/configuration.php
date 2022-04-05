@@ -15,6 +15,6 @@ return [
       'SMTPAuth' => true,
       'username' => 'lubiebass@gmail.com',
       'password' => 'player1234',
-      'from' => 'example@example.com'
+      'from' => 'kazol@kazol.pl'
     ]
   ];

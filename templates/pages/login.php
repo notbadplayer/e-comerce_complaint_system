@@ -30,10 +30,9 @@
 </head>
 
 <body class="text-center">
-
     <main class="form-signin">
         <form method="post" action="/?action=login">
-            <img class="mb-4" src="templates/img/logo13.png" alt="" width="300" height="151">
+            <?php echo (!empty($logoLocation)) ? "<img class='mb-4' src=$logoLocation style='max-height:725px;max-width:500px'></img>" : '' ?>
             <h1 class="h3 mb-3 fw-normal">Zaloguj się</h1>
 
             <div class="form-floating">

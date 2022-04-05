@@ -63,14 +63,14 @@ abstract class AppController
             $task_types = '';
             for ($i = 0; $i < 5; $i++) { //docelowo będę pobierał liczbę dopuszcalnych typów z konfiguracji
                 if ($this->request->postParam("task_type_$i")) {
-                    $task_types = $task_types . ";" . preg_replace('/[^A-Za-z0-9\-\s]/', '', $this->request->postParam("task_type_$i"));
+                    $task_types = $task_types . ";" . preg_replace('/[^A-Za-ząćęłńóśźżĄĘŁŃÓŚŹŻ0-9\-\s]/', '', $this->request->postParam("task_type_$i"));
                 }
             }
             $task_types = trim($task_types, ';'); //usuwam ostatni separator
             $status_types = '';
             for ($i = 0; $i < 5; $i++) { //docelowo będę pobierał liczbę dopuszcalnych typów z konfiguracji
                 if ($this->request->postParam("status_type_$i")) {
-                    $status_types = $status_types . ";" . preg_replace('/[^A-Za-z0-9\-\s]/', '', $this->request->postParam("status_type_$i"));
+                    $status_types = $status_types . ";" . preg_replace('/[^A-Za-ząćęłńóśźżĄĘŁŃÓŚŹŻ0-9\-\s]/', '', $this->request->postParam("status_type_$i"));
                 }
             }
             $status_types = trim($status_types, ';'); //usuwam ostatni separator
@@ -88,7 +88,7 @@ abstract class AppController
                 'task_period' => $this->request->postParam('taskPeriod'),
                 'logo' => new fileController($_FILES['logo']), //pobieramy plik z formularza i wrzucamy do oddzielnego kontrolera 
             ];
-   
+
             $validatedConfiguration = $this->validator->validate($userConfiguration);
 
             if (!$validatedConfiguration['pass']) {
@@ -121,15 +121,24 @@ abstract class AppController
         ]);
     }
 
+    protected function getLogo()
+    {
+        $logoFromDb = $this->userSetting->getSetting('logo');
+        $logoToDecode = str_replace('&quot;', '"', ($logoFromDb ?? ''));
+        $logoLocation = (json_Decode($logoToDecode, true) ?? [])['logo']['location'] ?? '';
+        return $logoLocation;
+    }
+
     protected function validateLogin(): void
     {
         if (!isset($_SESSION['login'])) {
-            $this->view->login();
+
+            $this->view->login(null, $this->getLogo());
             exit();
         }
     }
 
-    public function login()
+    protected function login()
     {
         if ($this->request->hasPost()) {
             $validatedUser = $this->taskModel->validateLogin($this->request->postParam('username'), $this->request->postParam('password'));
@@ -138,7 +147,7 @@ abstract class AppController
                 header("location:/");
                 exit();
             } else {
-                $this->view->login('Nieprawidłowa nazwa użytkownika lub hasło.');
+                $this->view->login('Nieprawidłowa nazwa użytkownika lub hasło.', $this->getLogo());
                 exit();
             }
         }

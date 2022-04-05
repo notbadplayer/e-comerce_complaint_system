@@ -28,7 +28,7 @@ class View
         return $escapedParams;
     }
 
-    public function login(string $error = null): void
+    public function login(string $error = null, string $logoLocation): void
     {
         require_once('templates/pages/login.php');
     }
