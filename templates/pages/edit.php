@@ -3,7 +3,10 @@ $messages = $params['messages'] ?? [];
 $taskData = $params['taskData'] ?? [];
 $tasksTypes = $params['types'] ?? [];
 $statusTypes = $params['statuses'] ?? [];
-$filestoDecode = str_replace('&quot;', '"', $taskData['files']);
+$filestoDecode = '';
+if($taskData['files']){ //optymalizacja pod php8, w php8 do str replace nie można dawać nulla
+    $filestoDecode = str_replace('&quot;', '"', $taskData['files']);
+}
 $files = json_Decode($filestoDecode, true) ?? [];
 $historytoDecode = (str_replace('&quot;', '"', $taskData['history']));
 $history = json_decode($historytoDecode, true);

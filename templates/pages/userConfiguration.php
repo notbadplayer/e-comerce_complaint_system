@@ -37,7 +37,6 @@ switch ($params['status'] ?? '') {
     </div>
 
     <div class="card-body p-0 p-md-2 p-xl-3">
-
         <form method="post" action="/?action=changeUserSettings" enctype="multipart/form-data">
             <div class="container">
                 <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -47,7 +46,7 @@ switch ($params['status'] ?? '') {
                             <div class="card-body">
                                 <h5 class="card-title mb-3"><i class="far fa-envelope me-2"></i>Mailing</h5>
                                 <div class="form-check form-switch mb-2 mb-lg-4">
-                                    <input class="form-check-input" name="enableMails" type="checkbox" role="switch" value="1" id="enable_mails_switch" <?php echo (isset($userConfiguration['enableMails']) && $userConfiguration['enableMails'] === '1' ? 'checked' : '') ?>>
+                                    <input class="form-check-input" name="enableMails" type="checkbox" role="switch" value="1" id="enable_mails_switch" <?php echo (isset($userConfiguration['enableMails']) && $userConfiguration['enableMails'] == '1' ? 'checked' : '') ?>>
                                     <label class="form-check-label" for="enable_mails_switch">Włącz powiadomienia mailowe</label>
                                 </div>
 
@@ -56,31 +55,31 @@ switch ($params['status'] ?? '') {
                                     <div class="px-3">
                                         <div class="row mb-2">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_register" type="checkbox" role="switch" value="1" id="mail_register" <?php echo (isset($userConfiguration['mail_register']) && $userConfiguration['mail_register'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_register" type="checkbox" role="switch" value="1" id="mail_register" <?php echo (isset($userConfiguration['mail_register']) && $userConfiguration['mail_register'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_register">utworzeniu nowego zlecenia</label>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_type" type="checkbox" role="switch" value="1" id="mail_type" <?php echo (isset($userConfiguration['mail_type']) && $userConfiguration['mail_type'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_type" type="checkbox" role="switch" value="1" id="mail_type" <?php echo (isset($userConfiguration['mail_type']) && $userConfiguration['mail_type'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_type">zmianie typu zgłoszenia</label>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_priority" type="checkbox" role="switch" value="1" id="mail_priority" <?php echo (isset($userConfiguration['mail_priority']) && $userConfiguration['mail_priority'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_priority" type="checkbox" role="switch" value="1" id="mail_priority" <?php echo (isset($userConfiguration['mail_priority']) && $userConfiguration['mail_priority'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_priority">zmianie priorytetu zgłoszenia</label>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_status" type="checkbox" role="switch" value="1" id="mail_status" <?php echo (isset($userConfiguration['mail_status']) && $userConfiguration['mail_status'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_status" type="checkbox" role="switch" value="1" id="mail_status" <?php echo (isset($userConfiguration['mail_status']) && $userConfiguration['mail_status'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_status">zmianie statusu zgłoszenia</label>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_term" type="checkbox" role="switch" value="1" id="mail_term" <?php echo (isset($userConfiguration['mail_term']) && $userConfiguration['mail_term'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_term" type="checkbox" role="switch" value="1" id="mail_term" <?php echo (isset($userConfiguration['mail_term']) && $userConfiguration['mail_term'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_term">zmianie terminu realizacji</label>
                                             </div>
                                         </div>
@@ -88,7 +87,7 @@ switch ($params['status'] ?? '') {
                                         <div class="row mt-4 mb-2">
                                             <hr class="dropdown-divider">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input mail_secondary" name="mail_link" type="checkbox" role="switch" value="1" id="mail_link" <?php echo (isset($userConfiguration['mail_link']) && $userConfiguration['mail_link'] === '1' ? 'checked' : '') ?>>
+                                                <input class="form-check-input mail_secondary" name="mail_link" type="checkbox" role="switch" value="1" id="mail_link" <?php echo (isset($userConfiguration['mail_link']) && $userConfiguration['mail_link'] == '1' ? 'checked' : '') ?>>
                                                 <label class="form-check-label" for="mail_link">dodaj link do śledzenia w mailu</label>
                                             </div>
                                         </div>
@@ -239,5 +238,4 @@ switch ($params['status'] ?? '') {
         rangeValueView.textContent = rangeBar.value;
     });
 
-    //wpisanie nazwy pliku w inpucie 'logo'
 </script>
